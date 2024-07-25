@@ -7,7 +7,7 @@ namespace CardBuildingGame.Gameplay.Cards
     {
         public int HealthPoints = 0;
 
-        public override void Play(ICardTarget target)
+        public override void Play(ICardTarget target, ICardTarget source = null)
         {
             target.Health.GetHealth(HealthPoints);
         }

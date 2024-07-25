@@ -7,6 +7,6 @@ namespace CardBuildingGame.Gameplay.Cards
     {
         public Sprite Icon;
         public string TextForMarker;
-        public abstract void Play(ICardTarget target);
+        public abstract void Play(ICardTarget target, ICardTarget source = null);
     }
 }

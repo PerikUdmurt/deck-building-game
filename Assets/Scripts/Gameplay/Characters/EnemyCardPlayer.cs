@@ -13,15 +13,18 @@ namespace CardBuildingGame.Gameplay.Characters
         private HandDeck _handDeck;
         private Energy _energy;
         private ICard _preparedCard;
+        private ICardTarget _source;
 
-        public CardPlayer(List<CardData> cardDatas, int energy, int maxEnergy)
+        public CardPlayer(List<CardData> cardDatas, int energy, int maxEnergy, ICardTarget source = null)
         {
             _cardReset = new CardReset();
             _deck = new Deck(cardDatas, _cardReset);
             _handDeck = new HandDeck();
             _energy = new Energy(energy, maxEnergy);
+            _source = source;
         }
 
+        public ICardTarget Source { get => _source; }
         public IDeck Deck { get => _deck; }
         public ICardReset CardReset { get => _cardReset; }
         public HandDeck HandDeck { get => _handDeck; }
@@ -48,7 +51,7 @@ namespace CardBuildingGame.Gameplay.Characters
         {
             if (_energy.TrySpendEnergy(card.CardData.EnergyCost))
             {
-                card.PlayCard(cardTarget);
+                card.PlayCard(cardTarget, _source);
             }
             else card.MoveCardPresentationToHolder();
         }

@@ -41,7 +41,6 @@ namespace CardBuildingGame.Gameplay.Cards
                 sb.AppendLine($"{c.TargetLayer}");
             }
             sb.AppendLine($"{targetLayer}");
-            Debug.Log( sb.ToString() );
 
             var availableTargets = from target in cardTargets
                                    where target.TargetLayer == targetLayer

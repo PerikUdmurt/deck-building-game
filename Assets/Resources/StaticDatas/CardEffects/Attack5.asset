@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Attack5
   m_EditorClassIdentifier: 
   Icon: {fileID: 1629502028, guid: b2713bbf286ea3b4d8cf4478d348ee16, type: 3}
+  TextForMarker: 5
   Damage: 5

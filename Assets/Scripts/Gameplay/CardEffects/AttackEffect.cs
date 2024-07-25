@@ -7,8 +7,9 @@ namespace CardBuildingGame.Gameplay.Cards
     {
         public int Damage = 0;
 
-        public override void Play(ICardTarget target)
+        public override void Play(ICardTarget target, ICardTarget source = null)
         {
+            source?.Animator.SetTrigger("attack");
             target.Health.GetDamage(Damage);
         }
     }

@@ -2,9 +2,7 @@
 using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
-using UnityEngine;
 using System.Linq;
-using System;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {

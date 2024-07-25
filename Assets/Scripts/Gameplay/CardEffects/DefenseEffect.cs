@@ -7,7 +7,7 @@ namespace CardBuildingGame.Gameplay.Cards
     {
         public int DefensePoints = 0;
 
-        public override void Play(ICardTarget target)
+        public override void Play(ICardTarget target, ICardTarget source = null)
         {
             target.Health.GetDefense(DefensePoints);
         }

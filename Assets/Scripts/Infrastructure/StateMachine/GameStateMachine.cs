@@ -9,7 +9,9 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             _states = new()
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, projectDiContainer),
-                [typeof(GameLoopState)] = new GameLoopState(this, projectDiContainer),
+                [typeof(MainMenuState)] = new MainMenuState(this, projectDiContainer),
+                [typeof(LoadLevelState)] = new LoadLevelState(this, projectDiContainer),
+                [typeof(GameLoopState)] = new GameLoopState(this)
             };
         }
     }

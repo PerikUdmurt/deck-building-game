@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Defense5
   m_EditorClassIdentifier: 
   Icon: {fileID: -1751398833, guid: b2713bbf286ea3b4d8cf4478d348ee16, type: 3}
+  TextForMarker: 5
   DefensePoints: 5

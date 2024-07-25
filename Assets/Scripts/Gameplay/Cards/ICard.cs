@@ -12,6 +12,6 @@ namespace CardBuildingGame.Gameplay.Cards
 
         void CleanUp();
         void MoveCardPresentationToHolder();
-        void PlayCard(ICardTarget target);
+        void PlayCard(ICardTarget target, ICardTarget source = null);
     }
 }

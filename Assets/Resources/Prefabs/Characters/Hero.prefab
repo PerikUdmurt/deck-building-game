@@ -450,6 +450,8 @@ MonoBehaviour:
   _healthMarker: {fileID: 7087392304611167147}
   _defenseMarker: {fileID: 1590902433775224492}
   _attackMarker: {fileID: 3192491267665793375}
+  _targetLayer: 0
+  _animator: {fileID: 4348258916397801081}
 --- !u!61 &961542761170747166
 BoxCollider2D:
   m_ObjectHideFlags: 0

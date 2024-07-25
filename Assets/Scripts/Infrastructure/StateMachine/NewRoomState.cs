@@ -36,7 +36,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             LevelData levelData = _projectContainer.Resolve<LevelData>();
 
             levelData.CurrentRoom += 1;
-            hud.SetRoomText(levelData.CurrentRoom);
+            hud.SetRoomText(levelData.CurrentRoom, levelData.MaxRoom);
         }
 
         private void SpawnEnemies()

@@ -28,16 +28,16 @@ namespace CardBuildingGame.Gameplay.Cards
 
         public void MoveCardPresentationToHolder() => _cardHolder.Add(_cardPresentation);
 
-        public void PlayCard(ICardTarget target)
+        public void PlayCard(ICardTarget target, ICardTarget source = null)
         {
-            PlayCardEffects(target);
+            PlayCardEffects(target, source);
             Played?.Invoke(this);
         }
 
-        private void PlayCardEffects(ICardTarget target)
+        private void PlayCardEffects(ICardTarget target, ICardTarget source = null)
         {
             foreach (CardEffect effect in _cardData.Effects)
-                effect.Play(target);
+                effect.Play(target, source);
         }
 
         public void CleanUp()

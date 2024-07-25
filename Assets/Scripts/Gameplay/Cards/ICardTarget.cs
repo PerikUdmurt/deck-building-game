@@ -9,6 +9,7 @@ namespace CardBuildingGame.Gameplay.Cards
         IHealth Health { get; }
         TargetLayer TargetLayer { get; }
         ICardPlayer CardPlayer { get; }
+        Animator Animator { get; }
 
         event Action<Character> Died;
     }

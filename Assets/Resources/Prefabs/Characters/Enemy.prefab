@@ -545,6 +545,7 @@ MonoBehaviour:
   _defenseMarker: {fileID: 6760999411961098246}
   _attackMarker: {fileID: 310178448479324027}
   _targetLayer: 1
+  _animator: {fileID: 1109324342563762666}
 --- !u!1 &4136835067435049257
 GameObject:
   m_ObjectHideFlags: 0

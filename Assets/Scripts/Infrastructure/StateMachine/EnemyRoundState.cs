@@ -1,9 +1,7 @@
 ﻿using CardBuildingGame.Datas;
 using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Services.DI;
-using System.Collections;
 using System.Linq;
-using UnityEngine;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
@@ -11,48 +9,55 @@ namespace CardBuildingGame.Infrastructure.StateMachine
     {
         private readonly GameStateMachine _gameStateMachine;
         private readonly RoundStateMachine _roundStateMachine;
-        private readonly DiContainer _projectContainer;
+        private readonly DiContainer _sceneContainer;
         
-        public EnemyRoundState(GameStateMachine gameStateMachine, RoundStateMachine stateMachine, DiContainer projectContainer) 
+        public EnemyRoundState(GameStateMachine gameStateMachine, RoundStateMachine stateMachine, DiContainer sceneContainer) 
         {
             _gameStateMachine = gameStateMachine;
             _roundStateMachine = stateMachine;
-            _projectContainer = projectContainer;
+            _sceneContainer = sceneContainer;
         }
 
         public void Enter()
         {
-            HUDController hud = _projectContainer.Resolve<HUDController>();
+            HUDController hud = _sceneContainer.Resolve<HUDController>();
             hud.SetButtonInteractable(false);
 
+            if (CheckGameFinished())
+                return;
+
             DoEnemyActions();
-
-            if (CheckRoomFinished())
-                CheckGameFinished();
-
-            
 
             _roundStateMachine.Enter<PlayerRoundState>();
         }
 
         public void Exit()
         {
-            HUDController hud = _projectContainer.Resolve<HUDController>();
+            HUDController hud = _sceneContainer.Resolve<HUDController>();
             hud.SetButtonInteractable(true);
         }
 
-        private void CheckGameFinished()
+        private bool CheckGameFinished()
         {
-            LevelData levelData = _projectContainer.Resolve<LevelData>();
-            if (levelData.CurrentRoom == 3)
-                _gameStateMachine.Enter<GameLoopState>();
+            HUDController hud = _sceneContainer.Resolve<HUDController>();
+            LevelData levelData = _sceneContainer.Resolve<LevelData>();
 
-            _roundStateMachine.Enter<NewRoomState>();
+            if (CheckRoomFinished())
+            {
+                if (levelData.CurrentRoom == levelData.MaxRoom)
+                {
+                    hud.OnVictory();
+                    return true;
+                }
+
+                _roundStateMachine.Enter<NewRoomState>();
+            }
+            return false;
         }
 
         private void DoEnemyActions()
         {
-            LevelData levelData = _projectContainer.Resolve<LevelData>();
+            LevelData levelData = _sceneContainer.Resolve<LevelData>();
 
             var enemies = from enemy in levelData.Characters
                           where enemy.TargetLayer == TargetLayer.Enemy
@@ -60,7 +65,6 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
             foreach (var enemy in enemies)
             {
-                Debug.Log(enemy.CardPlayer.PreparedCard);
                 enemy.CardPlayer.PlayPreparedCard(levelData.Characters);
             }
         }
@@ -68,7 +72,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private bool CheckRoomFinished()
         {
-            LevelData levelData = _projectContainer.Resolve<LevelData>();
+            LevelData levelData = _sceneContainer.Resolve<LevelData>();
 
             var enemies = from enemy in levelData.Characters
                           where enemy.TargetLayer == TargetLayer.Enemy

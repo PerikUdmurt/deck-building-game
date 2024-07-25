@@ -12,6 +12,7 @@ namespace CardBuildingGame.Gameplay.Characters
         [SerializeField] private MarkerUI _defenseMarker;
         [SerializeField] private MarkerUI _attackMarker;
         [SerializeField] private TargetLayer _targetLayer;
+        [SerializeField] private Animator _animator;
 
         private IHealth _health;
         private ICardPlayer _player;
@@ -19,12 +20,13 @@ namespace CardBuildingGame.Gameplay.Characters
         public IHealth Health { get => _health; }
         public ICardPlayer CardPlayer { get => _player; }
         public TargetLayer TargetLayer { get => _targetLayer; }
+        public Animator Animator { get => _animator; }
 
         public event Action<Character> Died;
 
         public void Construct(int health, int maxHealth, int energy, int maxEnergy, List<CardData> cardDatas, int defense = 0)
         {
-            _player = new CardPlayer(cardDatas, energy, maxEnergy);
+            _player = new CardPlayer(cardDatas, energy, maxEnergy, this);
             _health = new Health(health, maxHealth, defense);
             _health.HealthChanged += UpdateHealthMarker;
             _health.DefenceChanged += UpdateDefenceMarker;
