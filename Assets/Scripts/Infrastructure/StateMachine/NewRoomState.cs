@@ -8,12 +8,12 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 {
     public class NewRoomState : IState
     {
-        private readonly GameStateMachine _gameStateMachine;
+        private readonly RoundStateMachine _roundStateMachine;
         private readonly DiContainer _projectContainer;
 
-        public NewRoomState(GameStateMachine gameStateMachine, DiContainer projectContainer) 
+        public NewRoomState(RoundStateMachine roundStateMachine, DiContainer projectContainer) 
         {
-            _gameStateMachine = gameStateMachine;
+            _roundStateMachine = roundStateMachine;
             _projectContainer = projectContainer;
         }
 
@@ -22,7 +22,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             UpdateHUD();
             SpawnEnemies();
 
-            _gameStateMachine.Enter<PlayerRoundState>();
+            _roundStateMachine.Enter<PlayerRoundState>();
         }
 
         public void Exit()
@@ -45,8 +45,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             Vector3 enemyPosition = _projectContainer.Resolve<Vector3>("EnemyPosition");
             Vector3 delta = _projectContainer.Resolve<Vector3>("DeltaEnemySpawnOffset");
 
-            characterSpawner.SpawnCharacterFromStaticData("Enemy1", enemyPosition);
-            characterSpawner.SpawnCharacterFromStaticData("Enemy2", enemyPosition + delta);
+            characterSpawner.SpawnCharacterFromStaticData("Enemy1", "EnemyDeck1", enemyPosition);
+            characterSpawner.SpawnCharacterFromStaticData("Enemy2", "EnemyDeck2", enemyPosition + delta);
         }
     }
 }

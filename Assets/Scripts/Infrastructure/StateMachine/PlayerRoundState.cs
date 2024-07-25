@@ -1,28 +1,60 @@
-﻿using CardBuildingGame.Gameplay.Stacks;
+﻿using CardBuildingGame.Datas;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
+using UnityEngine;
+using System.Linq;
+using System;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
     public class PlayerRoundState : IState
     {
-        private readonly GameStateMachine _gameStateMachine;
+        private readonly RoundStateMachine _roundStateMachine;
         private DiContainer _container;
 
-        public PlayerRoundState(GameStateMachine gameStateMachine , DiContainer container) 
+        public PlayerRoundState(RoundStateMachine roundStateMachine , DiContainer container) 
         {
-            _gameStateMachine = gameStateMachine;
+            _roundStateMachine = roundStateMachine;
             _container = container;
         }
 
         public void Enter()
         {
             HUDController hud = _container.Resolve<HUDController>();
-
+            PrepareEnemyAttack();
+            RestorePlayer();
             SpawnCards(5);
             UpdateHUD(hud);
         }
 
+        private void RestorePlayer()
+        {
+            LevelData levelData = _container.Resolve<LevelData>();
+
+            var players = from player in levelData.Characters
+                          where player.TargetLayer == TargetLayer.Player
+                          select player;
+
+            foreach (var player in players)
+            {
+                player.CardPlayer.Energy.RestoreEnergy();
+            }
+        }
+
+        private void PrepareEnemyAttack()
+        {
+            LevelData levelData = _container.Resolve<LevelData>();
+            
+            var enemies = from enemy in levelData.Characters
+                          where enemy.TargetLayer == TargetLayer.Enemy
+                          select enemy;
+             
+            foreach (var enemy in enemies) 
+            {
+                enemy.CardPlayer.PrepareCard();
+            }
+        }
 
         public void Exit()
         {
@@ -34,7 +66,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             cardSpawner.DespawnAllCards();
         }
 
-        public void StartEnemyRound() => _gameStateMachine.Enter<EnemyRoundState>();
+        public void StartEnemyRound() => _roundStateMachine.Enter<EnemyRoundState>();
         
         private void UpdateHUD(HUDController hud)
         {
@@ -45,10 +77,9 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private void SpawnCards(int num)
         {
             ICardSpawner cardSpawner = _container.Resolve<ICardSpawner>();
-            IDeck deck = _container.Resolve<IDeck>(tag: "PlayerDeck");
-
+            Character character = _container.Resolve<Character>(tag: "Hero");
             for (int i = 0; i < num; i++)
-                cardSpawner.SpawnCardFromDeck(deck, new UnityEngine.Vector3());
+                cardSpawner.SpawnCardFromDeck(character.CardPlayer.Deck, new UnityEngine.Vector3(0,-10,0));
         }
     }
 }

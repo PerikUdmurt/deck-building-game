@@ -17,6 +17,6 @@ MonoBehaviour:
   Sprite: {fileID: 450093703, guid: 91ece539279118a438c900dfb08582ed, type: 3}
   TargetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   Effects:
   - {fileID: 11400000, guid: 71c569700f6674a48a7bc362d54f2b72, type: 2}

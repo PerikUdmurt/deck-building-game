@@ -6,6 +6,6 @@ namespace CardBuildingGame.Infrastructure.Factories
     public interface ICharacterSpawner
     {
         void DespawnCharacter(Character character);
-        Character SpawnCharacterFromStaticData(string staticDataID, Vector3 atPosition);
+        Character SpawnCharacterFromStaticData(string CharacterID, string deckID, Vector3 atPosition);
     }
 }

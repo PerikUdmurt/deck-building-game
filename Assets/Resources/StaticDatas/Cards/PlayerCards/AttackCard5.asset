@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: AttackCard5
   m_EditorClassIdentifier: 
   Name: AttackCard5
-  EnergyCost: 3
+  EnergyCost: 2
   Sprite: {fileID: -963042467, guid: 91ece539279118a438c900dfb08582ed, type: 3}
   TargetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   Effects:
   - {fileID: 11400000, guid: 99a3b96b8e726db4db28530d404e4342, type: 2}

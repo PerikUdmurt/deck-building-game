@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CardBuildingGame
 {
-    
+
     public class Bootstraper : MonoBehaviour
     {
         [SerializeField] private LayerMask _enemyLayer;

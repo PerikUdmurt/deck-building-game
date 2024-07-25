@@ -1,6 +1,5 @@
 ﻿using CardBuildingGame.Gameplay.Stacks;
 using System;
-using System.Text;
 using UnityEngine;
 
 namespace CardBuildingGame.Gameplay.Cards
@@ -16,48 +15,43 @@ namespace CardBuildingGame.Gameplay.Cards
             _cardData = cardData;
             _cardPresentation = cardPresentation;
             _cardHolder = cardHolder;
+
+            if (cardHolder != null)
             _cardPresentation.Dropped += FindNearestTarget;
         }
 
         public event Action<ICard> Played;
+        public event Action<ICard, ICardTarget> TargetFinded;
 
         public CardData CardData { get => _cardData;}
         public CardPresentation CardPresentation { get => _cardPresentation;}
 
-        private void MoveCardPresentationToHolder() => _cardHolder.Add(_cardPresentation);
+        public void MoveCardPresentationToHolder() => _cardHolder.Add(_cardPresentation);
 
         public void PlayCard(ICardTarget target)
         {
             PlayCardEffects(target);
             Played?.Invoke(this);
-            CleanUp();
         }
 
         private void PlayCardEffects(ICardTarget target)
         {
             foreach (CardEffect effect in _cardData.Effects)
-            {
                 effect.Play(target);
-            }
+        }
 
-            StringBuilder sb = new StringBuilder();
-            foreach (CardEffect effect in _cardData.Effects) { sb.AppendLine(effect.ToString()); }
+        public void CleanUp()
+        {
+            if (_cardHolder != null)
+            _cardPresentation.Dropped -= FindNearestTarget;
         }
 
         private void FindNearestTarget(Collider2D collider)
         {
-            TargetFinder targetFinder = new(collider);
-            if (targetFinder.FindNearestCardTarget(_cardData.TargetLayer, out ICardTarget cardTarget))
-                PlayCard(cardTarget);
+            TargetFinder targetFinder = new();
+            if (targetFinder.FindNearestCardTarget(collider,_cardData.TargetLayer, out ICardTarget cardTarget))
+                TargetFinded?.Invoke(this, cardTarget);
             else MoveCardPresentationToHolder();
-        }
-
-        private void CleanUp()
-        {
-            _cardPresentation.Dropped -= FindNearestTarget;
-            _cardPresentation = null;
-            _cardData = null;
-            Debug.Log("Cleaned");
         }
     }
 }

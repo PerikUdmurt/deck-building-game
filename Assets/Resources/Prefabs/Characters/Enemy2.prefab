@@ -372,8 +372,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7543aa742638fd64196b1c4942c97a31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthMarker: {fileID: 8214319589557211993}
-  DefenseMarker: {fileID: 589370907612418519}
+  _healthMarker: {fileID: 8214319589557211993}
+  _defenseMarker: {fileID: 589370907612418519}
+  _attackMarker: {fileID: 1854103826404032780}
+  _targetLayer: 1
 --- !u!1 &4072521505546023313
 GameObject:
   m_ObjectHideFlags: 0

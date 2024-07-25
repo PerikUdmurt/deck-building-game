@@ -1,5 +1,4 @@
 using CardBuildingGame.Gameplay.Cards;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -39,14 +38,15 @@ namespace CardBuildingGame.Gameplay.Stacks
 
         private void Sort()
         {
-            _cardPresentations.OrderBy(p => p.SortInfo.Item1).ThenBy(p => p.SortInfo.Item2);
-            for (int i = 0; i > _cardPresentations.Count; i++)
+            var list = from card in _cardPresentations
+                       orderby card.SortInfo.Item1, card.SortInfo.Item2
+                       select card;
+
+            for (int i = 0; i < list.Count(); i++)
             {
                 Vector3 newPos = _holderPosition + (_deltaCardOffset * i);
                 _cardPresentations[i].MoveTo(newPos);
-                Debug.Log(newPos.ToString());
             }
-            
         }
     }
 }

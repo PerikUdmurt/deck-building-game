@@ -1,24 +1,27 @@
 using CardBuildingGame.Gameplay.Cards;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Gameplay.Stacks;
 using System;
-using UnityEngine;
 
 public class HUDController
 {
     private readonly HUD _hud;
     private readonly ICardReset _cardReset;
     private readonly IDeck _deck;
+    private readonly Energy _energy;
 
-    public HUDController(HUD hud, ICardReset cardReset, IDeck deck)
+    public HUDController(HUD hud, ICardPlayer cardPlayer)
     {
         _hud = hud;
-        _cardReset = cardReset;
+        _cardReset = cardPlayer.CardReset;
         _cardReset.Changed += SetCardResetText;
-        _deck = deck;
+        _deck = cardPlayer.Deck;
         _deck.Changed += SetDeckText;
+        _energy = cardPlayer.Energy;
+        _energy.Changed += SetEnergyText;
         _hud.EndTurnButtonPressed += EndTurn;
-        SetCardResetText(cardReset.GetCards().Count);
-        SetDeckText(deck.GetCards().Count);
+        SetCardResetText(_cardReset.GetCards().Count);
+        SetDeckText(_deck.GetCards().Count);
     }
 
     public event Action EndTurnButtonPressed;

@@ -1,11 +1,11 @@
 using CardBuildingGame.Gameplay.Cards;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Gameplay.Stacks;
 using CardBuildingGame.Infrastructure.ObjectPool;
 using CardBuildingGame.Services;
 using CardBuildingGame.StaticDatas;
 using System;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace CardBuildingGame.Infrastructure.Factories
 {
@@ -13,16 +13,14 @@ namespace CardBuildingGame.Infrastructure.Factories
     {
         private ObjectPool<CardPresentation> _cardPool;
         private IStaticDataService _staticDataService;
-        private readonly ICardReset _cardReset;
-        private readonly HandDeck _handDeck;
+        private readonly ICardPlayer _cardPlayer;
         private readonly CardPresentationHolder _cardHolder;
 
-        public CardSpawner(int prepareObjects, IStaticDataService staticDataService, ICardReset cardReset, HandDeck handDeck, CardPresentationHolder cardHolder)
+        public CardSpawner(int prepareObjects, IStaticDataService staticDataService, ICardPlayer cardPlayer, CardPresentationHolder cardHolder)
         {
             _cardPool = new(AssetPath.Card, prepareObjects);
             _staticDataService = staticDataService;
-            _cardReset = cardReset;
-            _handDeck = handDeck;
+            _cardPlayer = cardPlayer;
             _cardHolder = cardHolder;
         }
 
@@ -53,18 +51,20 @@ namespace CardBuildingGame.Infrastructure.Factories
         }
 
 
-        public void DespawnCard(ICard cardModel) 
+        public void DespawnCard(ICard card) 
         {
-            cardModel.Played -= DespawnCard;
-            _cardHolder.Remove(cardModel.CardPresentation);
-            _cardPool.Release(cardModel.CardPresentation);
-            _cardReset.Add(cardModel.CardData);
-            _handDeck.Remove(cardModel);
+            card.Played -= DespawnCard;
+            card.TargetFinded -= _cardPlayer.PlayCard;
+            card.CleanUp();
+            _cardHolder.Remove(card.CardPresentation);
+            _cardPool.Release(card.CardPresentation);
+            _cardPlayer.CardReset.Add(card.CardData);
+            _cardPlayer.HandDeck.Remove(card);
         }
 
         public void DespawnAllCards()
         {
-            ICard[] cardModels = _handDeck.GetAllCardModels();
+            ICard[] cardModels = _cardPlayer.HandDeck.GetAllCardModels();
 
             foreach (ICard cardModel in cardModels)
                 DespawnCard(cardModel);
@@ -73,7 +73,8 @@ namespace CardBuildingGame.Infrastructure.Factories
         private ICard CreateCardModel(CardData cardData, CardPresentation cardPresentation)
         {
             ICard cardModel = new Card(cardData, cardPresentation, _cardHolder);
-            _handDeck.Add(cardModel);
+            _cardPlayer.HandDeck.Add(cardModel);
+            cardModel.TargetFinded += _cardPlayer.PlayCard;
             cardModel.Played += DespawnCard;
             return cardModel;
         }

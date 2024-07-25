@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CardBuildingGame.Gameplay.Characters;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CardBuildingGame.Gameplay.Cards
@@ -7,12 +8,12 @@ namespace CardBuildingGame.Gameplay.Cards
     {
         public string CardName { get; private set; }
         public int EnergyCost { get; private set; }
-        public LayerMask TargetLayer { get; private set;}
+        public TargetLayer TargetLayer { get; private set;}
         public Sprite Sprite { get; private set; }
         public List<CardEffect> Effects { get; private set; }
 
 
-        public CardData(int energyCost, List<CardEffect> effects, string cardName, Sprite sprite, LayerMask targetLayer)
+        public CardData(int energyCost, List<CardEffect> effects, string cardName, Sprite sprite, TargetLayer targetLayer)
         {
             EnergyCost = energyCost;
             Effects = effects;

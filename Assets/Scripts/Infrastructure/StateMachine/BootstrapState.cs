@@ -1,12 +1,11 @@
 ﻿using CardBuildingGame.Datas;
 using CardBuildingGame.Gameplay.Cards;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Gameplay.Stacks;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services;
 using CardBuildingGame.Services.DI;
-using CardBuildingGame.StaticDatas;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
@@ -16,10 +15,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private readonly GameStateMachine _gameStateMachine;
         private readonly DiContainer _container;
 
-        private IDeck _deck;
-        private ICardReset _cardReset;
         private CardPresentationHolder _cardHolder;
-        private HandDeck _handDeck;
+        private Character _character;
 
         public BootstrapState(GameStateMachine gameStateMachine, DiContainer container)
         {
@@ -31,13 +28,13 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         {
             RegisterStaticDataServices();
             RegisterLevelData();
-            InstantiateDecks();
-            InstantiateHUD();
-            RegisterCardSpawner();
             RegisterCharacterSpawner();
-            InstantiateHero();
+            _character = InstantiateHero();
+            _cardHolder = InitCardHolder();
+            RegisterCardSpawner();
+            InstantiateHUD();
 
-            _gameStateMachine.Enter<NewRoomState>();
+            _gameStateMachine.Enter<GameLoopState>();
         }
 
         public void Exit()
@@ -58,34 +55,6 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             _container.RegisterInstance(levelData);
         }
 
-        private void InstantiateDecks()
-        {
-            _cardReset = new CardReset();
-
-            _handDeck = new HandDeck();
-
-            _deck = InitPlayerDeck(_cardReset);
-
-            _cardHolder = InitCardHolder();
-        }
-
-        private IDeck InitPlayerDeck(ICardReset cardReset)
-        {
-            IDeck deck = new Deck(new List<CardData>(), cardReset);
-            var deckStaticData = _container.Resolve<DeckStaticData>("InitialDeckStaticData");
-
-            foreach (CardStaticData cardStaticData in deckStaticData.Cards)
-            {
-                CardData data = cardStaticData.ToCardData();
-                if (data != null)
-                    deck.AddCard(data);
-            }
-
-            _container.RegisterInstance(deck, tag: "PlayerDeck");
-
-            return deck;
-        }
-
         private CardPresentationHolder InitCardHolder()
         {
             CardPresentationHolder cardHolder = new(
@@ -99,15 +68,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         {
             IHUDSpawner hudSpawner = new HUDSpawner();
             HUD hud = hudSpawner.SpawnHUD();
-            HUDController _hudController = new(hud, _cardReset, _deck);
+            HUDController _hudController = new(hud, _character.CardPlayer);
             _container.RegisterInstance(_hudController);
-        }
-
-        private void RegisterCardSpawner()
-        {
-            ICardSpawner cardSpawner =
-                new CardSpawner(6, _container.Resolve<IStaticDataService>(), _cardReset, _handDeck, _cardHolder);
-            _container.RegisterInstance(cardSpawner);
         }
 
         private void RegisterCharacterSpawner()
@@ -117,11 +79,20 @@ namespace CardBuildingGame.Infrastructure.StateMachine
                     staticDataService: _container.Resolve<IStaticDataService>(), 
                     levelData: _container.Resolve<LevelData>()));
 
-        private void InstantiateHero()
+        private Character InstantiateHero()
         {
             ICharacterSpawner characterSpawner = _container.Resolve<ICharacterSpawner>();
             Vector3 playerMarkerPosition = _container.Resolve<Vector3>("HeroPosition");
-            characterSpawner.SpawnCharacterFromStaticData("Hero", playerMarkerPosition);
+            Character hero = characterSpawner.SpawnCharacterFromStaticData("Hero", "HeroDeck", playerMarkerPosition);
+            _container.RegisterInstance(hero, "Hero");
+            return hero;
+        }
+
+        private void RegisterCardSpawner()
+        {
+            ICardSpawner cardSpawner =
+                new CardSpawner(6, _container.Resolve<IStaticDataService>(), _character.CardPlayer, _cardHolder);
+            _container.RegisterInstance(cardSpawner);
         }
     }
 }

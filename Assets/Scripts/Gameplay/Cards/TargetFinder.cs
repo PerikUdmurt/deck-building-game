@@ -1,42 +1,60 @@
-﻿using System.Collections.Generic;
+﻿using CardBuildingGame.Gameplay.Characters;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace CardBuildingGame.Gameplay.Cards
 {
     public class TargetFinder
     {
-        private readonly Collider2D _collider;
-
-        public TargetFinder(Collider2D collider) 
-        {
-            _collider = collider;
-        }
-
-        public bool FindNearestCardTarget(LayerMask layerMask, out ICardTarget cardTarget)
+        public bool FindNearestCardTarget(Collider2D collider, TargetLayer targetLayer, out ICardTarget cardTarget)
         {
             cardTarget = null;
-            List<Collider2D> colliders = FindAllCollider(layerMask);
+            List<Collider2D> colliders = FindAllColliders(collider);
+            List<ICardTarget> allTargets = new List<ICardTarget>();
             if (colliders.Count == 0) return false;
 
             var targets = from c in colliders
                           where c.gameObject.TryGetComponent<ICardTarget>(out ICardTarget a)
-                          orderby (c.transform.position - _collider.transform.position).magnitude
+                          orderby (c.transform.position - collider.transform.position).magnitude
                           select c;
-            
-            Collider2D target = targets.FirstOrDefault();
-            if (target == null) return false;
 
-            target.TryGetComponent<ICardTarget>(out var result);
-            cardTarget = result;
+            foreach (var coll in targets) 
+            { 
+                coll.TryGetComponent<ICardTarget>(out cardTarget);
+                allTargets.Add(cardTarget);
+            }
+                
+            ICardTarget totalTarget = allTargets.FirstOrDefault(c => c.TargetLayer == targetLayer);
+            if (totalTarget == null) return false;
+
+            cardTarget = totalTarget;
             return true;
         }
 
-        private List<Collider2D> FindAllCollider(LayerMask layerMask)
+        public ICardTarget FindRandomTarget(IEnumerable<ICardTarget> cardTargets, TargetLayer targetLayer)
         {
-            Vector2 leftBottomCorner = new(_collider.bounds.min.x, _collider.bounds.min.y);
-            Vector2 rightTopCorner = new(_collider.bounds.max.x, _collider.bounds.max.y);
-            Collider2D[] colliders = Physics2D.OverlapAreaAll(leftBottomCorner, rightTopCorner, layerMask);
+            StringBuilder sb = new StringBuilder();
+            foreach (var c in cardTargets)
+            {
+                sb.AppendLine($"{c.TargetLayer}");
+            }
+            sb.AppendLine($"{targetLayer}");
+            Debug.Log( sb.ToString() );
+
+            var availableTargets = from target in cardTargets
+                                   where target.TargetLayer == targetLayer
+                                   select target;
+
+            return availableTargets.FirstOrDefault();
+        }
+
+        private List<Collider2D> FindAllColliders(Collider2D collider)
+        {
+            Vector2 leftBottomCorner = new(collider.bounds.min.x, collider.bounds.min.y);
+            Vector2 rightTopCorner = new(collider.bounds.max.x, collider.bounds.max.y);
+            Collider2D[] colliders = Physics2D.OverlapAreaAll(leftBottomCorner, rightTopCorner);
             return colliders.ToList();
         }
     }

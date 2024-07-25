@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9c7578fe09e0024eb805cf4ca9f7dcd, type: 3}
   m_Name: EnemyDeck
   m_EditorClassIdentifier: 
-  Cards: []
+  Cards:
+  - {fileID: 11400000, guid: f645e7353377d4743a81fab869fc8be7, type: 2}
+  - {fileID: 11400000, guid: f645e7353377d4743a81fab869fc8be7, type: 2}
+  - {fileID: 11400000, guid: f645e7353377d4743a81fab869fc8be7, type: 2}

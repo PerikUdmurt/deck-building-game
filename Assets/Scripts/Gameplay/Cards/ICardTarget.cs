@@ -7,7 +7,8 @@ namespace CardBuildingGame.Gameplay.Cards
     public interface ICardTarget
     {
         IHealth Health { get; }
-        LayerMask TargetLayer { get; }
+        TargetLayer TargetLayer { get; }
+        ICardPlayer CardPlayer { get; }
 
         event Action<Character> Died;
     }

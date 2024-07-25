@@ -18,6 +18,7 @@ namespace CardBuildingGame.StaticDatas
         public int Health = 30;
         public int MaxHealth = 30;
         public int Defense = 0;
+        public int Energy = 10;
 
         private void OnValidate()
         {

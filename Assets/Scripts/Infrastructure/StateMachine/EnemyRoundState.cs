@@ -1,40 +1,38 @@
 ﻿using CardBuildingGame.Datas;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Services.DI;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
     public class EnemyRoundState : IState
     {
-        private readonly GameStateMachine _stateMachine;
+        private readonly GameStateMachine _gameStateMachine;
+        private readonly RoundStateMachine _roundStateMachine;
         private readonly DiContainer _projectContainer;
         
-        public EnemyRoundState(GameStateMachine stateMachine, DiContainer projectContainer) 
+        public EnemyRoundState(GameStateMachine gameStateMachine, RoundStateMachine stateMachine, DiContainer projectContainer) 
         {
-            _stateMachine = stateMachine;
+            _gameStateMachine = gameStateMachine;
+            _roundStateMachine = stateMachine;
             _projectContainer = projectContainer;
         }
 
         public void Enter()
         {
             HUDController hud = _projectContainer.Resolve<HUDController>();
-            hud.SetButtonInteractable(true);
+            hud.SetButtonInteractable(false);
+
+            DoEnemyActions();
 
             if (CheckRoomFinished())
                 CheckGameFinished();
 
-            _stateMachine.Enter<PlayerRoundState>();
-        }
+            
 
-        private void CheckGameFinished()
-        {
-            LevelData levelData = _projectContainer.Resolve<LevelData>();
-            if (levelData.CurrentRoom == 3)
-                _stateMachine.Enter<BootstrapState>();
-
-            _stateMachine.Enter<NewRoomState>();
+            _roundStateMachine.Enter<PlayerRoundState>();
         }
 
         public void Exit()
@@ -43,12 +41,37 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             hud.SetButtonInteractable(true);
         }
 
+        private void CheckGameFinished()
+        {
+            LevelData levelData = _projectContainer.Resolve<LevelData>();
+            if (levelData.CurrentRoom == 3)
+                _gameStateMachine.Enter<GameLoopState>();
+
+            _roundStateMachine.Enter<NewRoomState>();
+        }
+
+        private void DoEnemyActions()
+        {
+            LevelData levelData = _projectContainer.Resolve<LevelData>();
+
+            var enemies = from enemy in levelData.Characters
+                          where enemy.TargetLayer == TargetLayer.Enemy
+                          select enemy;
+
+            foreach (var enemy in enemies)
+            {
+                Debug.Log(enemy.CardPlayer.PreparedCard);
+                enemy.CardPlayer.PlayPreparedCard(levelData.Characters);
+            }
+        }
+
+
         private bool CheckRoomFinished()
         {
             LevelData levelData = _projectContainer.Resolve<LevelData>();
 
             var enemies = from enemy in levelData.Characters
-                          where enemy.TargetLayer.value == 7
+                          where enemy.TargetLayer == TargetLayer.Enemy
                           select enemy;
 
             if (enemies.Count() == 0)
