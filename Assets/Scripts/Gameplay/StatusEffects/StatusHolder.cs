@@ -28,6 +28,7 @@ namespace CardBuildingGame.Gameplay.Statuses
                 return;
             }
             _statuses.Add(status, 1);
+            Changed?.Invoke();
         }
 
         public List<KeyValuePair<Status, int>> GetStatusesByType(StatusType type) 
@@ -50,6 +51,7 @@ namespace CardBuildingGame.Gameplay.Statuses
         {
             if (_statuses.ContainsKey(status))
                 _statuses.Remove(status);
+            Changed?.Invoke();
         }
 
         public void ReduceStatus(Status status)
@@ -65,6 +67,7 @@ namespace CardBuildingGame.Gameplay.Statuses
 
             _statuses[status]--;
             CheckStatus();
+            Changed?.Invoke();
         }
 
         public void ReduceAllStatus(StatusType statusType)
@@ -76,6 +79,8 @@ namespace CardBuildingGame.Gameplay.Statuses
 
             for (int i = 0; i < list.Count; i++)
                 ReduceStatus(list[i].Key);
+
+            Changed?.Invoke();
         }
 
         public int GetStatusTotalValue(StatusType statusType)

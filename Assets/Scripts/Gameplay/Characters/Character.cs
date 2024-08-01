@@ -14,6 +14,7 @@ namespace CardBuildingGame.Gameplay.Characters
         [SerializeField] private MarkerUI _attackMarker;
         [SerializeField] private TargetLayer _targetLayer;
         [SerializeField] private Animator _animator;
+        [SerializeField] private StatusPresentationHolder _statusPresentationHolder;
 
         private IHealth _health;
         private ICardPlayer _player;

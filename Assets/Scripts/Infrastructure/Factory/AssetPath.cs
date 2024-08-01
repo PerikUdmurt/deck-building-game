@@ -12,6 +12,7 @@
         public const string Hero = "Hero";
         public const string Enemy = "Enemy";
         public const string Enemy2 = "Enemy2";
+        public const string StatusPresentation = "StatusPresentation";
     }
 }
     
