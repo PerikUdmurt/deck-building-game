@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 788145799505fe44bbb46f46b40eef72, type: 3}
+  m_Name: MultiAttackCard
+  m_EditorClassIdentifier: 
+  Name: AttackCard5
+  EnergyCost: 2
+  Sprite: {fileID: -963042467, guid: 91ece539279118a438c900dfb08582ed, type: 3}
+  TargetLayer: 1
+  Effects:
+  - {fileID: 11400000, guid: 99a3b96b8e726db4db28530d404e4342, type: 2}

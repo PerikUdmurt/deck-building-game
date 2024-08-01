@@ -1,5 +1,6 @@
 ﻿using CardBuildingGame.Gameplay.Cards;
 using CardBuildingGame.Gameplay.Stacks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace CardBuildingGame.Infrastructure.Factories
@@ -8,8 +9,8 @@ namespace CardBuildingGame.Infrastructure.Factories
     {
         void DespawnAllCards();
         void DespawnCard(ICard cardModel);
-        ICard SpawnCard(CardData cardData, Vector3 at);
-        ICard SpawnCardByStaticData(string CardID , Vector3 at);
-        ICard SpawnCardFromDeck(IDeck deck, Vector3 at);
+        UniTask<ICard> SpawnCard(CardData cardData, Vector3 at);
+        UniTask<ICard> SpawnCardByStaticData(string CardID , Vector3 at);
+        UniTask<ICard> SpawnCardFromDeck(IDeck deck, Vector3 at);
     }
 }

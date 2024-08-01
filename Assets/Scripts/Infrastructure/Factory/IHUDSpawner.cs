@@ -1,4 +1,6 @@
-﻿public interface IHUDSpawner
+﻿using Cysharp.Threading.Tasks;
+
+public interface IHUDSpawner
 {
-    public HUD SpawnHUD();
+    public UniTask<HUD> SpawnHUD();
 }

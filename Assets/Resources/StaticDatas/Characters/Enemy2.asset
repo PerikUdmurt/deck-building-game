@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Enemy2
   m_EditorClassIdentifier: 
   Name: Enemy2
-  Prefab: {fileID: 4072521505062543147, guid: 1c3a24296a9515b45a93c356781e9da2, type: 3}
+  BundlePath: Enemy2
   Health: 10
   MaxHealth: 10
   Defense: 2
+  Energy: 10

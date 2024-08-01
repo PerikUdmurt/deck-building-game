@@ -1,23 +1,22 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
+using YGameTemplate.Infrastructure.AssetProviders;
 
-namespace CardBuildingGame.Infrastructure.Factories
+namespace YGameTemplate.Infrastructure.Factory
 {
-    public class Factory<T>
+    public class Factory<T> where T : MonoBehaviour
     {
-        private string _assetPath;
+        private readonly string _bundlePath;
+        private IAssetProvider _assetProvider;
+        private AbstractFactory<T> _abstractFactory;
 
-        public Factory(string assetPath)
+        public Factory(IAssetProvider assetProvider, string bundlePath)
         {
-            _assetPath = assetPath;
+            _abstractFactory = new AbstractFactory<T>(assetProvider);
+            _bundlePath = bundlePath;
         }
 
-        public T Create()
-        {
-            GameObject resource = Resources.Load<GameObject>(_assetPath);
-            GameObject obj = GameObject.Instantiate(resource, new Vector3(0,0,0),Quaternion.identity);
-            obj.TryGetComponent<T>(out  var result);
-            return result;
-        }
+        public async UniTask<T> Create() => await _abstractFactory.Create(_bundlePath);
     }
 }
     

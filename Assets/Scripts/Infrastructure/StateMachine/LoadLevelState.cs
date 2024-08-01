@@ -6,9 +6,11 @@ using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services;
 using CardBuildingGame.Services.DI;
 using CardBuildingGame.Services.SceneLoader;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using YGameTemplate.Infrastructure.AssetProviders;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
@@ -33,15 +35,16 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             _sceneLoader.Load(sceneName, OnLoaded);
         }
 
-        private void OnLoaded()
+        private async void OnLoaded()
         {
             _sceneContainer = GetSceneContainer();
             RegisterLevelData();
             RegisterCharacterSpawner();
-            _character = InstantiateHero();
+            _character = await InstantiateHero();
             _cardHolder = InitCardHolder();
             RegisterCardSpawner();
-            InstantiateHUD();
+            await InstantiateHUD();
+
             _gameStateMachine.Enter<GameLoopState, DiContainer>(_sceneContainer);
         }
 
@@ -57,20 +60,23 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             return sceneInstaller.GetSceneInstaller(_projectContainer);
         }
 
-        private Character InstantiateHero()
+        private async UniTask<Character> InstantiateHero()
         {
             ICharacterSpawner characterSpawner = _sceneContainer.Resolve<ICharacterSpawner>();
             Vector3 playerMarkerPosition = _sceneContainer.Resolve<Vector3>("HeroPosition");
-            Character hero = characterSpawner.SpawnCharacterFromStaticData("Hero", "HeroDeck", playerMarkerPosition);
+
+            Character hero = await characterSpawner.SpawnCharacterFromStaticData("Hero", "HeroDeck", playerMarkerPosition);
             _sceneContainer.RegisterInstance(hero, "Hero");
-            
+
             return hero;
         }
 
         private void RegisterCardSpawner()
         {
+            IAssetProvider assetProvider = _sceneContainer.Resolve<IAssetProvider>();
+
             ICardSpawner cardSpawner =
-                new CardSpawner(6, _sceneContainer.Resolve<IStaticDataService>(), _character.CardPlayer, _cardHolder);
+                new CardSpawner(_sceneContainer.Resolve<IStaticDataService>(), _character.CardPlayer, _cardHolder, assetProvider);
             _sceneContainer.RegisterInstance(cardSpawner);
         }
 
@@ -83,10 +89,11 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             return cardHolder;
         }
 
-        private void InstantiateHUD()
+        private async UniTask InstantiateHUD()
         {
-            IHUDSpawner hudSpawner = new HUDSpawner();
-            HUD hud = hudSpawner.SpawnHUD();
+            IAssetProvider assetProvider = _sceneContainer.Resolve<IAssetProvider>();
+            IHUDSpawner hudSpawner = new HUDSpawner(assetProvider);
+            HUD hud = await hudSpawner.SpawnHUD();
             HUDController hudController = new(hud, _character.CardPlayer, _gameStateMachine);
             _character.Died += hudController.OnGameOver;
             _sceneContainer.RegisterInstance(hudController);
@@ -105,6 +112,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
                 DiRegistrationType.AsTransient,
                 c => new CharacterSpawner(
                     staticDataService: _sceneContainer.Resolve<IStaticDataService>(),
-                    levelData: _sceneContainer.Resolve<LevelData>()));
+                    levelData: _sceneContainer.Resolve<LevelData>(),
+                    assetProvider: _sceneContainer.Resolve<IAssetProvider>())
+                );
     }
 }

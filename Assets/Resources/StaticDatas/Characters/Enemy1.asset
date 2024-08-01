@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: Enemy1
   m_EditorClassIdentifier: 
   Name: Enemy1
-  Prefab: {fileID: 4136835067425529071, guid: aeba40512eeb4e547ac7c0ca6f5ebcd1, type: 3}
+  BundlePath: Enemy1
   Health: 15
   MaxHealth: 15
   Defense: 0
-  Cards:
-  - {fileID: 11400000, guid: f645e7353377d4743a81fab869fc8be7, type: 2}
+  Energy: 10

@@ -1,4 +1,6 @@
-using UnityEngine;
+using Cysharp.Threading.Tasks;
+using YGameTemplate.Infrastructure.AssetProviders;
+using YGameTemplate.Infrastructure.Factory;
 
 namespace CardBuildingGame.Infrastructure.Factories
 {
@@ -6,14 +8,14 @@ namespace CardBuildingGame.Infrastructure.Factories
     {
         private Factory<HUD> _factory;
 
-        public HUDSpawner()
+        public HUDSpawner(IAssetProvider assetProvider)
         {
-            _factory = new Factory<HUD>(AssetPath.HUD);
+            _factory = new Factory<HUD>(assetProvider ,BundlePath.HUD);
         }
 
-        public HUD SpawnHUD()
+        public async UniTask<HUD> SpawnHUD()
         {
-            HUD hud = _factory.Create();
+            HUD hud = await _factory.Create();
             return hud;
         }
     }

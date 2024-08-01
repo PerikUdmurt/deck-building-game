@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CardBuildingGame.StaticDatas
@@ -11,8 +10,8 @@ namespace CardBuildingGame.StaticDatas
         [Header("Info")]
         public string Name = "EmptyName";
 
-        [Header("Prefab")]
-        public GameObject Prefab;
+        [Header("Bundle")]
+        public string BundlePath;
         
         [Header("Health")]
         public int Health = 30;
@@ -29,8 +28,8 @@ namespace CardBuildingGame.StaticDatas
             if (Defense < 0) Defense = 0;
             if (Health < 1) Health = 1;
 
-            if (Prefab == null)
-                Debug.Log("Assign GameObject for prefab");
+            if (BundlePath == null)
+                Debug.Log("Assign BundlePath for CharacterStaticData");
         }
     }
 }

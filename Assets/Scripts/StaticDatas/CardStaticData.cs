@@ -12,9 +12,8 @@ namespace CardBuildingGame.StaticDatas
         public int EnergyCost = 0;
         public Sprite Sprite;
         public TargetLayer TargetLayer;
-        public List<CardEffect> Effects = new List<CardEffect>();
+        public List<CardEffectStaticData> StaticEffects = new List<CardEffectStaticData>();
 
-        public override string StaticDataID => Name;
-
+        public override string StaticDataID => name;
     }
 }

@@ -1,4 +1,5 @@
 using CardBuildingGame.Gameplay.Cards;
+using CardBuildingGame.Gameplay.Statuses;
 using CardBuildingGame.UI;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace CardBuildingGame.Gameplay.Characters
 
         private IHealth _health;
         private ICardPlayer _player;
+        private IStatusHolder _statusHolder;
 
         public IHealth Health { get => _health; }
         public ICardPlayer CardPlayer { get => _player; }
@@ -24,10 +26,11 @@ namespace CardBuildingGame.Gameplay.Characters
 
         public event Action<Character> Died;
 
-        public void Construct(int health, int maxHealth, int energy, int maxEnergy, List<CardData> cardDatas, int defense = 0)
+        public void Construct(CharacterData characterData, List<CardData> cardDatas)
         {
-            _player = new CardPlayer(cardDatas, energy, maxEnergy, this);
-            _health = new Health(health, maxHealth, defense);
+            _player = new CardPlayer(cardDatas, characterData.Energy, characterData.MaxEnergy, this);
+            _health = new Health(characterData.Health, characterData.MaxHealth, characterData.Defense);
+            _statusHolder = new StatusHolder(new List<Status>());
             _health.HealthChanged += UpdateHealthMarker;
             _health.DefenceChanged += UpdateDefenceMarker;
             _player.CardPrepared += UpdateAttackMarker;

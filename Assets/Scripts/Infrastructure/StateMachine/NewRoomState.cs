@@ -1,6 +1,7 @@
 ﻿using CardBuildingGame.Datas;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
+using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
@@ -17,10 +18,10 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             _projectContainer = projectContainer;
         }
 
-        public void Enter()
+        public async void Enter()
         {
             UpdateHUD();
-            SpawnEnemies();
+            await SpawnEnemies();
 
             _roundStateMachine.Enter<PlayerRoundState>();
         }
@@ -39,14 +40,14 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             hud.SetRoomText(levelData.CurrentRoom, levelData.MaxRoom);
         }
 
-        private void SpawnEnemies()
+        private async UniTask SpawnEnemies()
         {
             ICharacterSpawner characterSpawner = _projectContainer.Resolve<ICharacterSpawner>();
             Vector3 enemyPosition = _projectContainer.Resolve<Vector3>("EnemyPosition");
             Vector3 delta = _projectContainer.Resolve<Vector3>("DeltaEnemySpawnOffset");
 
-            characterSpawner.SpawnCharacterFromStaticData("Enemy1", "EnemyDeck1", enemyPosition);
-            characterSpawner.SpawnCharacterFromStaticData("Enemy2", "EnemyDeck2", enemyPosition + delta);
+            await characterSpawner.SpawnCharacterFromStaticData("Enemy1", "EnemyDeck1", enemyPosition);
+            await characterSpawner.SpawnCharacterFromStaticData("Enemy2", "EnemyDeck2", enemyPosition + delta);
         }
     }
 }

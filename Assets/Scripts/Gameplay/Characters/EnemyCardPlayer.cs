@@ -2,7 +2,6 @@
 using CardBuildingGame.Gameplay.Stacks;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace CardBuildingGame.Gameplay.Characters
 {

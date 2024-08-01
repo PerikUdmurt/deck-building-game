@@ -10,10 +10,10 @@ namespace CardBuildingGame.Gameplay.Cards
         public int EnergyCost { get; private set; }
         public TargetLayer TargetLayer { get; private set;}
         public Sprite Sprite { get; private set; }
-        public List<CardEffect> Effects { get; private set; }
+        public List<CardEffectStaticData> Effects { get; private set; }
 
 
-        public CardData(int energyCost, List<CardEffect> effects, string cardName, Sprite sprite, TargetLayer targetLayer)
+        public CardData(int energyCost, List<CardEffectStaticData> effects, string cardName, Sprite sprite, TargetLayer targetLayer)
         {
             EnergyCost = energyCost;
             Effects = effects;
