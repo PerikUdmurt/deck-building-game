@@ -1,7 +1,9 @@
 ﻿using CardBuildingGame.Datas;
 using CardBuildingGame.Gameplay.Characters;
+using CardBuildingGame.Gameplay.Statuses;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
+using System;
 using System.Linq;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
@@ -22,8 +24,24 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             HUDController hud = _container.Resolve<HUDController>();
             PrepareEnemyAttack();
             RestorePlayer();
+            ExecuteAllPlayerStatus();
             SpawnCards(5);
             UpdateHUD(hud);
+        }
+
+        private void ExecuteAllPlayerStatus()
+        {
+            LevelData levelData = _container.Resolve<LevelData>();
+            StatusPlayer statusPlayer = new();
+
+            var players = from player in levelData.Characters
+                          where player.TargetLayer == TargetLayer.Player
+                          select player;
+
+            foreach (var player in players)
+            {
+                statusPlayer.ExecuteAllStatuses(player);
+            }
         }
 
         private void RestorePlayer()

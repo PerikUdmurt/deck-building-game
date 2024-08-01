@@ -40,13 +40,5 @@ namespace CardBuildingGame
             Defense = staticData.Defense,
             BundlePath = staticData.BundlePath
         };
-
-        public static CardEffect ToCardEffect(this CardEffectStaticData staticData)
-            => new()
-            {
-
-            };
     }
-
-
 }

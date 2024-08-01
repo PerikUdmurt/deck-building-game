@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 788145799505fe44bbb46f46b40eef72, type: 3}
-  m_Name: MultiAttackCard
+  m_Name: Metka
   m_EditorClassIdentifier: 
-  Name: AttackCard5
-  EnergyCost: 2
-  Sprite: {fileID: -963042467, guid: 91ece539279118a438c900dfb08582ed, type: 3}
+  Name: Metka
+  EnergyCost: 0
+  Sprite: {fileID: 0}
   TargetLayer: 1
-  Effects:
-  - {fileID: 11400000, guid: 99a3b96b8e726db4db28530d404e4342, type: 2}
+  StaticEffects:
+  - {fileID: 11400000, guid: 4088a0f8f47f0594e8bfa804466f7809, type: 2}
+  - {fileID: 11400000, guid: 4088a0f8f47f0594e8bfa804466f7809, type: 2}

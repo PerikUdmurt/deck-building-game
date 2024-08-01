@@ -12,9 +12,4 @@ namespace CardBuildingGame.Gameplay.Cards
         public abstract string TextForMarker { get;}
         public abstract void Play(ICardTarget target, ICardTarget source = null);
     }
-
-    public class CardEffect
-    {
-
-    }
 }

@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 788145799505fe44bbb46f46b40eef72, type: 3}
-  m_Name: EnemyAttack5
+  m_Script: {fileID: 11500000, guid: abe777c96d7c58b41811c891a0582271, type: 3}
+  m_Name: MetkaEffect
   m_EditorClassIdentifier: 
-  Name: EnemyAttackCard
-  EnergyCost: 0
-  Sprite: {fileID: 0}
-  TargetLayer: 0
-  StaticEffects:
-  - {fileID: 11400000, guid: 99a3b96b8e726db4db28530d404e4342, type: 2}
+  Icon: {fileID: 0}
+  Description: 
+  Status: 3
+  Value: 1
+  isPerpetual: 0
+  isStackable: 1
+  isFullDecimate: 0

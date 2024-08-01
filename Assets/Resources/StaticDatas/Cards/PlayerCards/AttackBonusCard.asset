@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 788145799505fe44bbb46f46b40eef72, type: 3}
-  m_Name: EnemyAttack5
+  m_Name: AttackBonusCard
   m_EditorClassIdentifier: 
-  Name: EnemyAttackCard
-  EnergyCost: 0
+  Name: AttackBonusCard
+  EnergyCost: 1
   Sprite: {fileID: 0}
   TargetLayer: 0
   StaticEffects:
-  - {fileID: 11400000, guid: 99a3b96b8e726db4db28530d404e4342, type: 2}
+  - {fileID: 11400000, guid: 57b1d6e61e2921244b2c77177f00626f, type: 2}
+  - {fileID: 11400000, guid: 57b1d6e61e2921244b2c77177f00626f, type: 2}
+  - {fileID: 11400000, guid: 57b1d6e61e2921244b2c77177f00626f, type: 2}

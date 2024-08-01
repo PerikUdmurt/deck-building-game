@@ -15,8 +15,6 @@ MonoBehaviour:
   Name: HealthPotion5
   EnergyCost: 3
   Sprite: {fileID: -342949846, guid: 91ece539279118a438c900dfb08582ed, type: 3}
-  TargetLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  Effects:
+  TargetLayer: 0
+  StaticEffects:
   - {fileID: 11400000, guid: c61c9025b9361b44dbaef55c1ec4dcf5, type: 2}

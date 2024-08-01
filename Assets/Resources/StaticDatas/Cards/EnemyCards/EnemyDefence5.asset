@@ -16,5 +16,5 @@ MonoBehaviour:
   EnergyCost: 0
   Sprite: {fileID: 0}
   TargetLayer: 1
-  Effects:
+  StaticEffects:
   - {fileID: 11400000, guid: 71c569700f6674a48a7bc362d54f2b72, type: 2}

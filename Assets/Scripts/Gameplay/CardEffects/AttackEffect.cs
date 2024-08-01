@@ -1,6 +1,7 @@
-using CardBuildingGame.Gameplay.Statuses;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 namespace CardBuildingGame.Gameplay.Cards
 {
@@ -14,21 +15,49 @@ namespace CardBuildingGame.Gameplay.Cards
         public override void Play(ICardTarget target, ICardTarget source = null)
         {
             source?.Animator.SetTrigger("attack");
-            target.Health.GetDamage(Damage);
+
+            int totalDamage = GetModifiedDamage(target, source);
+
+            target.Health.GetDamage(totalDamage);
         }
-    }
 
-    [CreateAssetMenu(fileName = "NewStatusEffect", menuName = "StaticData/CardEffects/StatusEffect")]
-    public class AddStatusToSelf : CardEffectStaticData
-    {
-        public Status Status;
-        public int Value;
-
-        public override string TextForMarker => Value.ToString();
-
-        public override void Play(ICardTarget target, ICardTarget source = null)
+        private int GetModifiedDamage(ICardTarget target, ICardTarget source)
         {
-            
+            int totalDamage = Damage;
+            totalDamage += AddAttackBonus(source);
+            totalDamage *= DoubleDamage(target);
+            totalDamage -= AddArmor(target);
+
+            return totalDamage;
+        }
+
+        private int AddAttackBonus(ICardTarget source)
+        {
+            if (source.statusHolder.Contains(Statuses.StatusType.AttackBonus))
+                return source.statusHolder.GetStatusTotalValue(Statuses.StatusType.AttackBonus);
+            else return 0;
+        }
+
+        private int DoubleDamage(ICardTarget target)
+        {
+            if (target.statusHolder.Contains(Statuses.StatusType.DoubleDamage))
+            {
+                int result = target.statusHolder.GetStatusTotalValue(Statuses.StatusType.DoubleDamage) * 2;
+                target.statusHolder.ReduceAllStatus(Statuses.StatusType.DoubleDamage);
+                return result;
+            }
+            else return 1;
+        }
+
+        private int AddArmor(ICardTarget target) 
+        {
+            if (target.statusHolder.Contains(Statuses.StatusType.Armor))
+            {
+                int result = target.statusHolder.GetStatusTotalValue(Statuses.StatusType.Armor) * 2;
+                target.statusHolder.ReduceAllStatus(Statuses.StatusType.Armor);
+                return result;
+            }
+            else return 0;
         }
     }
 }

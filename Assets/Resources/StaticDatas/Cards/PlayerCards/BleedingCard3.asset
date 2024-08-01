@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 788145799505fe44bbb46f46b40eef72, type: 3}
-  m_Name: EnemyAttack5
+  m_Name: BleedingCard3
   m_EditorClassIdentifier: 
-  Name: EnemyAttackCard
+  Name: EmptyCard
   EnergyCost: 0
   Sprite: {fileID: 0}
-  TargetLayer: 0
+  TargetLayer: 1
   StaticEffects:
-  - {fileID: 11400000, guid: 99a3b96b8e726db4db28530d404e4342, type: 2}
+  - {fileID: 11400000, guid: 25709dacc0e414d4b990ec6c393530d6, type: 2}

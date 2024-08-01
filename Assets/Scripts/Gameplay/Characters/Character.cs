@@ -19,6 +19,7 @@ namespace CardBuildingGame.Gameplay.Characters
         private ICardPlayer _player;
         private IStatusHolder _statusHolder;
 
+        public IStatusHolder statusHolder { get => _statusHolder; }
         public IHealth Health { get => _health; }
         public ICardPlayer CardPlayer { get => _player; }
         public TargetLayer TargetLayer { get => _targetLayer; }
@@ -30,7 +31,7 @@ namespace CardBuildingGame.Gameplay.Characters
         {
             _player = new CardPlayer(cardDatas, characterData.Energy, characterData.MaxEnergy, this);
             _health = new Health(characterData.Health, characterData.MaxHealth, characterData.Defense);
-            _statusHolder = new StatusHolder(new List<Status>());
+            _statusHolder = new StatusHolder();
             _health.HealthChanged += UpdateHealthMarker;
             _health.DefenceChanged += UpdateDefenceMarker;
             _player.CardPrepared += UpdateAttackMarker;
