@@ -20,9 +20,11 @@ namespace YGameTemplate.Services.StatisticsService
 
             foreach (var item in _statisticsData.Statistics)
             {
-                _statistics.Add(item.statisticsCritetia, item.Value);
+                ModifyStatistics(item.statisticsCritetia, ModifyType.Set, item.Value);
             }
         }
+
+        public event Action Modified;
 
         public StatisticsData GetStatisticsData()
         {
@@ -76,6 +78,7 @@ namespace YGameTemplate.Services.StatisticsService
             }
 
             _statisticsData.DateOfModify = DateTime.Now.ToString();
+            Modified?.Invoke();
         }
 
         public enum ModifyType

@@ -1131,6 +1131,7 @@ MonoBehaviour:
   _cardResetText: {fileID: 6718860577483996144}
   _floorText: {fileID: 8691567729267254302}
   _energyText: {fileID: 7728974201156382735}
+  _scoreText: {fileID: 444861210318736139}
   _pauseCanvas: {fileID: 1243683599653216603}
   _endGameCanvas: {fileID: 5540169467617023466}
   _endGameButton: {fileID: 9043372054800953816}

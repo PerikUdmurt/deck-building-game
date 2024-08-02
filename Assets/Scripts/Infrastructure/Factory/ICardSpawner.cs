@@ -7,6 +7,7 @@ namespace CardBuildingGame.Infrastructure.Factories
 {
     public interface ICardSpawner
     {
+        void CleanUp();
         void DespawnAllCards();
         void DespawnCard(ICard cardModel);
         UniTask<ICard> SpawnCard(CardData cardData, Vector3 at);

@@ -6,23 +6,35 @@ using System;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
+using YGameTemplate.Infrastructure.Score;
+using YGameTemplate.Services.StatisticsService;
 
 public class HUDController
 {
+    private readonly Character _character;
+    private readonly GameStatisticsService _gameStatisticsService;
     private HUD _hud;
+    private ScoreSystem _scoreSystem;
     private ICardReset _cardReset;
     private IDeck _deck;
     private Energy _energy;
 
-    public HUDController(HUD hud, ICardPlayer cardPlayer, GameStateMachine gameStateMachine)
+    public HUDController(HUD hud, Character player, GameStateMachine gameStateMachine, ScoreSystem scoreSystem, GameStatisticsService gameStatisticsService)
     {
         _hud = hud;
-        BindMainGameCanvas(hud, cardPlayer);
+        _character = player;
+        _scoreSystem = scoreSystem;
+        _scoreSystem.ScoreChanged += SetScoreText;
+        player.Died += OnGameOver;
+        _gameStatisticsService = gameStatisticsService;
+        BindMainGameCanvas(hud, player);
         BindEndGameCanvas(hud, gameStateMachine);
     }
 
 
     public event Action EndTurnButtonPressed;
+
+    public void SetScoreText(int score) => _hud.SetScoreText($"Score: {score}");
 
     public void SetDeckText(int count) => _hud.SetDeckText($"Deck: {count}");
 
@@ -52,17 +64,27 @@ public class HUDController
         ShowEndGameCanvas();
     }
 
-    private void BindMainGameCanvas(HUD hud, ICardPlayer cardPlayer)
+    public void CleanUp()
     {
-        _cardReset = cardPlayer.CardReset;
+        _cardReset.Changed -= SetCardResetText;
+        _deck.Changed -= SetDeckText;
+        _energy.Changed -= SetEnergyText;
+        _hud.EndTurnButtonPressed -= EndTurn;
+        _character.Died -= OnGameOver;
+    }
+
+    private void BindMainGameCanvas(HUD hud, Character character)
+    {
+        _cardReset = character.CardPlayer.CardReset;
         _cardReset.Changed += SetCardResetText;
-        _deck = cardPlayer.Deck;
+        _deck = character.CardPlayer.Deck;
         _deck.Changed += SetDeckText;
-        _energy = cardPlayer.Energy;
+        _energy = character.CardPlayer.Energy;
         _energy.Changed += SetEnergyText;
         _hud.EndTurnButtonPressed += EndTurn;
         SetCardResetText(_cardReset.GetCards().Count);
         SetDeckText(_deck.GetCards().Count);
+        SetScoreText(_scoreSystem.GetScore());
     }
 
     private void BindEndGameCanvas(HUD hud, GameStateMachine gameStateMachine)

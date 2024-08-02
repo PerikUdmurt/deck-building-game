@@ -5,6 +5,7 @@ using CardBuildingGame.Services;
 using CardBuildingGame.StaticDatas;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using YGameTemplate.Infrastructure.AssetProviders;
 using YGameTemplate.Infrastructure.ObjectPool;
@@ -14,6 +15,7 @@ namespace CardBuildingGame.Infrastructure.Factories
 {
     public class CardSpawner: ICardSpawner
     {
+        private List<ICard> _spawnedCard;
         private ObjectPool<CardPresentation> _cardPool;
         private IStaticDataService _staticDataService;
         private readonly ICardPlayer _cardPlayer;
@@ -22,6 +24,7 @@ namespace CardBuildingGame.Infrastructure.Factories
 
         public CardSpawner(IStaticDataService staticDataService, ICardPlayer cardPlayer, CardPresentationHolder cardHolder, IAssetProvider assetProvider, GameStatisticsService gameStatisticsService)
         {
+            _spawnedCard = new();
             _cardPool = new(assetProvider, BundlePath.Card);
             _staticDataService = staticDataService;
             _cardPlayer = cardPlayer;
@@ -66,6 +69,7 @@ namespace CardBuildingGame.Infrastructure.Factories
             _cardPool.Release(card.CardPresentation);
             _cardPlayer.CardReset.Add(card.CardData);
             _cardPlayer.HandDeck.Remove(card);
+            _spawnedCard.Remove(card);
         }
 
         public void DespawnAllCards()
@@ -76,6 +80,15 @@ namespace CardBuildingGame.Infrastructure.Factories
                 DespawnCard(cardModel);
         }
 
+        public void CleanUp()
+        {
+            foreach (ICard card in _spawnedCard)
+            {
+                card.Played -= DespawnCard;
+                _cardStatisticsHandler.RemoveCard(card);
+            }
+        }
+
         private ICard CreateCardModel(CardData cardData, CardPresentation cardPresentation)
         {
             ICard cardModel = new Card(cardData, cardPresentation, _cardHolder);
@@ -83,6 +96,7 @@ namespace CardBuildingGame.Infrastructure.Factories
             cardModel.TargetFinded += _cardPlayer.PlayCard;
             cardModel.Played += DespawnCard;
             _cardStatisticsHandler.AddCard(cardModel);
+            _spawnedCard.Add(cardModel);
             return cardModel;
         }
 

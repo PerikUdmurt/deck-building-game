@@ -7,10 +7,13 @@ using CardBuildingGame.Services;
 using CardBuildingGame.Services.DI;
 using CardBuildingGame.Services.SceneLoader;
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Build.Utilities;
 using UnityEngine;
 using YGameTemplate.Infrastructure.AssetProviders;
+using YGameTemplate.Infrastructure.Score;
 using YGameTemplate.Services.StatisticsService;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
@@ -23,6 +26,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private SceneLoader _sceneLoader;
         private Character _character;
         private CardPresentationHolder _cardHolder;
+        private ScoreSystem _scoreSystem;
 
         public LoadLevelState(GameStateMachine gameStateMachine, DiContainer projectContainer)
         {
@@ -45,6 +49,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             _character = await InstantiateHero();
             _cardHolder = InitCardHolder();
             RegisterCardSpawner();
+            RegisterScoreSystem();
             await InstantiateHUD();
 
             _gameStateMachine.Enter<GameLoopState, DiContainer>(_sceneContainer);
@@ -52,7 +57,14 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         public void Exit()
         {
+            
+        }
 
+        private void RegisterScoreSystem()
+        {
+            _scoreSystem = new ScoreSystem
+                (_sceneContainer.Resolve<GameStatisticsService>());
+            _sceneContainer.RegisterInstance(_scoreSystem);
         }
 
         private void RegisterIntermidiateStatistics()
@@ -108,8 +120,13 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             IAssetProvider assetProvider = _sceneContainer.Resolve<IAssetProvider>();
             IHUDSpawner hudSpawner = new HUDSpawner(assetProvider);
             HUD hud = await hudSpawner.SpawnHUD();
-            HUDController hudController = new(hud, _character.CardPlayer, _gameStateMachine);
-            _character.Died += hudController.OnGameOver;
+            HUDController hudController = new(
+                hud, 
+                _character, 
+                _gameStateMachine, 
+                _sceneContainer.Resolve<ScoreSystem>(),
+                _sceneContainer.Resolve<GameStatisticsService>()
+                );
             _sceneContainer.RegisterInstance(hudController);
         }
 
