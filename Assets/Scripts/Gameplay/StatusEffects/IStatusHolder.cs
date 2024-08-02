@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CardBuildingGame.Gameplay.Statuses
 {
     public interface IStatusHolder
     {
         Dictionary<Status, int> Statuses { get; }
+
+        event Action Changed;
 
         void AddStatus(Status status);
         bool Contains(StatusType status);

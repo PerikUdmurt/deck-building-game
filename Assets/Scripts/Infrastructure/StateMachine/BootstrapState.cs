@@ -2,11 +2,13 @@
 using CardBuildingGame.Services.DI;
 using CardBuildingGame.Services.SceneLoader;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using YG;
 using YGameTempate.Services.SaveLoad;
 using YGameTemplate.Infrastructure.AssetProviders;
 using YGameTemplate.Services.Rewards;
+using YGameTemplate.Services.StatisticsService;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
@@ -23,10 +25,10 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         public void Enter()
         {
+            RegisterDataPersistentService();
             RegisterSceneLoaderService();
             RegisterStaticDataServices();
             RegisterAssetProvider();
-            RegisterDataPersistentService();
             RegisterRewardService();
 
             _gameStateMachine.Enter<MainMenuState>();
@@ -72,10 +74,16 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             _container.RegisterInstance(dataPersistentService);
         }
 
+        private void RegisterStatisticService(StatisticsData general, List<StatisticsData> statisticsDatas)
+        {
+            GameStatisticsService statisticsService = new GameStatisticsService(general, statisticsDatas);
+        }
+
         private IEnumerator LoadGame(IDataPersistentService service)
         {
             yield return new WaitUntil(() => YandexGame.SDKEnabled == false);
             service.LoadGame();
+            RegisterStatisticService(service.GameData.GeneralStatistics, service.GameData.IntermidiateStatistics);
             Debug.Log("SavesLoaded");
         }
     }

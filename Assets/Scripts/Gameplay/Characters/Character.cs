@@ -9,16 +9,16 @@ namespace CardBuildingGame.Gameplay.Characters
 {
     public class Character : MonoBehaviour, ICardTarget
     {
-        [SerializeField] private MarkerUI _healthMarker;
-        [SerializeField] private MarkerUI _defenseMarker;
-        [SerializeField] private MarkerUI _attackMarker;
-        [SerializeField] private TargetLayer _targetLayer;
-        [SerializeField] private Animator _animator;
-        [SerializeField] private StatusPresentationHolder _statusPresentationHolder;
+        [SerializeField] protected private MarkerUI _healthMarker;
+        [SerializeField] protected private MarkerUI _defenseMarker;
+        [SerializeField] protected private MarkerUI _attackMarker;
+        [SerializeField] protected private TargetLayer _targetLayer;
+        [SerializeField] protected private Animator _animator;
+        [SerializeField] protected private StatusPresentationHolder _statusPresentationHolder;
 
-        private IHealth _health;
-        private ICardPlayer _player;
-        private IStatusHolder _statusHolder;
+        protected private IHealth _health;
+        protected private ICardPlayer _player;
+        protected private IStatusHolder _statusHolder;
 
         public IStatusHolder statusHolder { get => _statusHolder; }
         public IHealth Health { get => _health; }
@@ -33,19 +33,27 @@ namespace CardBuildingGame.Gameplay.Characters
             _player = new CardPlayer(cardDatas, characterData.Energy, characterData.MaxEnergy, this);
             _health = new Health(characterData.Health, characterData.MaxHealth, characterData.Defense);
             _statusHolder = new StatusHolder();
+
             _health.HealthChanged += UpdateHealthMarker;
             _health.DefenceChanged += UpdateDefenceMarker;
             _player.CardPrepared += UpdateAttackMarker;
+            _statusHolder.Changed += UpdateStatusPresentation;
+            _health.Died += OnDied;
+
+            UpdateStatusPresentation();
             UpdateAttackMarker(null);
             UpdateDefenceMarker(_health.Defence);
             UpdateHealthMarker(_health.CurrentHealth, _health.MaxHealth);
-            _health.Died += OnDied;
         }
-
 
         private void OnDied()
         {
             Died?.Invoke(this);
+        }
+
+        private void UpdateStatusPresentation()
+        {
+
         }
 
         private void UpdateHealthMarker(int health, int maxHealth)
@@ -75,6 +83,28 @@ namespace CardBuildingGame.Gameplay.Characters
                 _attackMarker.SetText(card.CardData.Effects[0]?.TextForMarker);
                 _attackMarker.SetActive(true);
             }
+        }
+    }
+
+    public class Player: Character
+    {
+        public enum PlayerType
+        {
+            Player1 = 0, 
+            Player2 = 1, 
+            Player3 = 2, 
+            Player4 = 3,
+        }
+    }
+
+    public class Enemy: Character
+    {
+        public enum EnemyType
+        {
+            Enemy1 = 0,
+            Enemy2 = 1,
+            Enemy3 = 2,
+            Enemy4 = 3,
         }
     }
 }
