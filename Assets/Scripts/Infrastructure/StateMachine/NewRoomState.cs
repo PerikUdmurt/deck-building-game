@@ -1,4 +1,5 @@
 ﻿using CardBuildingGame.Datas;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
 using Cysharp.Threading.Tasks;
@@ -46,8 +47,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             Vector3 enemyPosition = _projectContainer.Resolve<Vector3>("EnemyPosition");
             Vector3 delta = _projectContainer.Resolve<Vector3>("DeltaEnemySpawnOffset");
 
-            await characterSpawner.SpawnCharacterFromStaticData("Enemy1", "EnemyDeck1", enemyPosition);
-            await characterSpawner.SpawnCharacterFromStaticData("Enemy2", "EnemyDeck2", enemyPosition + delta);
+            await characterSpawner.SpawnCharacterFromStaticData(Character.CharacterType.Enemy1, 1, enemyPosition);
+            await characterSpawner.SpawnCharacterFromStaticData(Character.CharacterType.Enemy2, 1, enemyPosition + delta);
         }
     }
 }

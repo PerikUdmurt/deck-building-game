@@ -11,7 +11,7 @@ namespace CardBuildingGame.Gameplay.Cards
         TargetLayer TargetLayer { get; }
         ICardPlayer CardPlayer { get; }
         Animator Animator { get; }
-        IStatusHolder statusHolder { get; }
+        IStatusHolder StatusHolder { get; }
 
         event Action<Character> Died;
     }

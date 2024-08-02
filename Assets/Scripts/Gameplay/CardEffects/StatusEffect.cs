@@ -26,7 +26,7 @@ namespace CardBuildingGame.Gameplay.Cards
             };
 
             for(int i = 0; i < Value; i++)
-                target.statusHolder.AddStatus(newStatus);
+                target.StatusHolder.AddStatus(newStatus);
         }
     }
 }

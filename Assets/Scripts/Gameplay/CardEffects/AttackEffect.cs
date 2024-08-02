@@ -33,17 +33,17 @@ namespace CardBuildingGame.Gameplay.Cards
 
         private int AddAttackBonus(ICardTarget source)
         {
-            if (source.statusHolder.Contains(Statuses.StatusType.AttackBonus))
-                return source.statusHolder.GetStatusTotalValue(Statuses.StatusType.AttackBonus);
+            if (source.StatusHolder.Contains(Statuses.StatusType.AttackBonus))
+                return source.StatusHolder.GetStatusTotalValue(Statuses.StatusType.AttackBonus);
             else return 0;
         }
 
         private int DoubleDamage(ICardTarget target)
         {
-            if (target.statusHolder.Contains(Statuses.StatusType.DoubleDamage))
+            if (target.StatusHolder.Contains(Statuses.StatusType.DoubleDamage))
             {
-                int result = target.statusHolder.GetStatusTotalValue(Statuses.StatusType.DoubleDamage) * 2;
-                target.statusHolder.ReduceAllStatus(Statuses.StatusType.DoubleDamage);
+                int result = target.StatusHolder.GetStatusTotalValue(Statuses.StatusType.DoubleDamage) * 2;
+                target.StatusHolder.ReduceAllStatus(Statuses.StatusType.DoubleDamage);
                 return result;
             }
             else return 1;
@@ -51,10 +51,10 @@ namespace CardBuildingGame.Gameplay.Cards
 
         private int AddArmor(ICardTarget target) 
         {
-            if (target.statusHolder.Contains(Statuses.StatusType.Armor))
+            if (target.StatusHolder.Contains(Statuses.StatusType.Armor))
             {
-                int result = target.statusHolder.GetStatusTotalValue(Statuses.StatusType.Armor) * 2;
-                target.statusHolder.ReduceAllStatus(Statuses.StatusType.Armor);
+                int result = target.StatusHolder.GetStatusTotalValue(Statuses.StatusType.Armor) * 2;
+                target.StatusHolder.ReduceAllStatus(Statuses.StatusType.Armor);
                 return result;
             }
             else return 0;

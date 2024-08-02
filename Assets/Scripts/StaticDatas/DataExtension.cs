@@ -38,7 +38,7 @@ namespace CardBuildingGame
             Energy = staticData.Energy,
             MaxEnergy = staticData.Energy,
             Defense = staticData.Defense,
-            BundlePath = staticData.BundlePath
+            CharacterType = staticData.CharacterType
         };
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using YGameTemplate.Infrastructure.AssetProviders;
 using YGameTemplate.Infrastructure.Factory;
+using static CardBuildingGame.Gameplay.Characters.Character;
 
 namespace CardBuildingGame.Infrastructure.Factories
 {
@@ -24,13 +25,13 @@ namespace CardBuildingGame.Infrastructure.Factories
             _factory = new(assetProvider);
         }
 
-        public async UniTask<Character> SpawnCharacterFromStaticData(string CharacterID ,string deckID ,Vector3 atPosition)
+        public async UniTask<Character> SpawnCharacterFromStaticData(CharacterType type, int deckID ,Vector3 atPosition)
         {
-            List<CardData> cardDatas = GetCardDatasFromStaticData(deckID);
+            List<CardData> cardDatas = GetCardDatasFromStaticData(type, deckID);
             
-            GetCharacterData(CharacterID, out CharacterData characterData);
+            GetCharacterData(type.ToString(), out CharacterData characterData);
 
-            Character character = await _factory.Create(characterData.BundlePath);
+            Character character = await _factory.Create(type.ToString());
             character.transform.position = atPosition;
             character.Construct(characterData, cardDatas);
             _levelData.Characters.Add(character);
@@ -52,9 +53,10 @@ namespace CardBuildingGame.Infrastructure.Factories
             GameObject.Destroy(character.gameObject);
         }
 
-        private List<CardData> GetCardDatasFromStaticData(string deckID)
+        private List<CardData> GetCardDatasFromStaticData(CharacterType type, int deckID)
         {
-            _staticDataService.GetStaticData(deckID, out StaticData staticData);
+            string totalID = type.ToString() + deckID.ToString();
+            _staticDataService.GetStaticData(totalID, out StaticData staticData);
             DeckStaticData staticDeck = staticData as DeckStaticData;
 
             List<CardData> cardDatas = staticDeck.ToCardDataList();

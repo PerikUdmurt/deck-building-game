@@ -65,7 +65,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             ICharacterSpawner characterSpawner = _sceneContainer.Resolve<ICharacterSpawner>();
             Vector3 playerMarkerPosition = _sceneContainer.Resolve<Vector3>("HeroPosition");
 
-            Character hero = await characterSpawner.SpawnCharacterFromStaticData("Hero", "HeroDeck", playerMarkerPosition);
+            Character hero = await characterSpawner.SpawnCharacterFromStaticData(Character.CharacterType.Player1, 1, playerMarkerPosition);
             _sceneContainer.RegisterInstance(hero, "Hero");
 
             return hero;

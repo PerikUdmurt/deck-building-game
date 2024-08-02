@@ -15,18 +15,18 @@ namespace CardBuildingGame.Gameplay.Statuses
 
         public void ExecuteAllStatuses(ICardTarget character)
         {
-            var statuses = character.statusHolder.Statuses.ToList();
+            var statuses = character.StatusHolder.Statuses.ToList();
 
             for (int i = 0; i < statuses.Count(); i++)
             {
                 _actions.Execute(statuses[i].Key.statusType, statuses[i].Value,character);
-                character.statusHolder.ReduceStatus(statuses[i].Key);
+                character.StatusHolder.ReduceStatus(statuses[i].Key);
             }
         }
 
         public void ExecuteStatus(Character character, StatusType statusType)
         {
-            var statuses = from c in character.statusHolder.Statuses
+            var statuses = from c in character.StatusHolder.Statuses
                        where c.Key.statusType == statusType
                        select c;
 
@@ -35,7 +35,7 @@ namespace CardBuildingGame.Gameplay.Statuses
             for (int i = 0; i < statusList.Count(); i++)
             {
                 _actions.Execute(statusType, statusList[i].Value, character);
-                character.statusHolder.ReduceStatus(statusList[i].Key);
+                character.StatusHolder.ReduceStatus(statusList[i].Key);
             }
         }
     }

@@ -20,7 +20,8 @@ namespace CardBuildingGame.Gameplay.Characters
         protected private ICardPlayer _player;
         protected private IStatusHolder _statusHolder;
 
-        public IStatusHolder statusHolder { get => _statusHolder; }
+        public CharacterType CurrentCharacterType { get; private set; }
+        public IStatusHolder StatusHolder { get => _statusHolder; }
         public IHealth Health { get => _health; }
         public ICardPlayer CardPlayer { get => _player; }
         public TargetLayer TargetLayer { get => _targetLayer; }
@@ -33,6 +34,7 @@ namespace CardBuildingGame.Gameplay.Characters
             _player = new CardPlayer(cardDatas, characterData.Energy, characterData.MaxEnergy, this);
             _health = new Health(characterData.Health, characterData.MaxHealth, characterData.Defense);
             _statusHolder = new StatusHolder();
+            CurrentCharacterType = characterData.CharacterType;
 
             _health.HealthChanged += UpdateHealthMarker;
             _health.DefenceChanged += UpdateDefenceMarker;
@@ -84,27 +86,18 @@ namespace CardBuildingGame.Gameplay.Characters
                 _attackMarker.SetActive(true);
             }
         }
-    }
 
-    public class Player: Character
-    {
-        public enum PlayerType
+        public enum CharacterType
         {
             Player1 = 0, 
             Player2 = 1, 
-            Player3 = 2, 
+            Player3 = 2,  
             Player4 = 3,
-        }
-    }
-
-    public class Enemy: Character
-    {
-        public enum EnemyType
-        {
-            Enemy1 = 0,
-            Enemy2 = 1,
-            Enemy3 = 2,
-            Enemy4 = 3,
+            
+            Enemy1 = 4, 
+            Enemy2 = 5, 
+            Enemy3 = 6, 
+            Enemy4 = 7
         }
     }
 }
