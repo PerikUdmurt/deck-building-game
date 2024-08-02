@@ -1,7 +1,7 @@
 {
-    "idSave": 14,
+    "idSave": 18,
     "isFirstSession": false,
     "language": "ru",
     "promptDone": false,
-    "JsonFile": "{\"GeneralStatistics\":{\"ID\":\"GeneralStatistics\",\"DateOfCreate\":\"02.08.2024 11:47:46\",\"DateOfModify\":\"02.08.2024 16:58:11\",\"Statistics\":[{\"statisticsCritetia\":\"KillMonser\",\"Value\":0},{\"statisticsCritetia\":\"CardPlayed\",\"Value\":0},{\"statisticsCritetia\":\"AttackCard5\",\"Value\":12},{\"statisticsCritetia\":\"DefenseCard5\",\"Value\":3},{\"statisticsCritetia\":\"Metka\",\"Value\":2},{\"statisticsCritetia\":\"Enemy2\",\"Value\":1},{\"statisticsCritetia\":\"Enemy1\",\"Value\":1},{\"statisticsCritetia\":\"Player1\",\"Value\":1},{\"statisticsCritetia\":\"kill_Enemy1\",\"Value\":1},{\"statisticsCritetia\":\"AttackBonusCard\",\"Value\":1},{\"statisticsCritetia\":\"kill_Enemy2\",\"Value\":1}]},\"IntermidiateStatistics\":[]}"
+    "JsonFile": "{\"GeneralStatistics\":{\"ID\":\"GeneralStatistics\",\"DateOfCreate\":\"02.08.2024 11:47:46\",\"DateOfModify\":\"02.08.2024 17:01:37\",\"Statistics\":[{\"statisticsCritetia\":\"KillMonser\",\"Value\":0},{\"statisticsCritetia\":\"CardPlayed\",\"Value\":0},{\"statisticsCritetia\":\"AttackCard5\",\"Value\":26},{\"statisticsCritetia\":\"DefenseCard5\",\"Value\":7},{\"statisticsCritetia\":\"Metka\",\"Value\":5},{\"statisticsCritetia\":\"Enemy2\",\"Value\":1},{\"statisticsCritetia\":\"Enemy1\",\"Value\":1},{\"statisticsCritetia\":\"Player1\",\"Value\":1},{\"statisticsCritetia\":\"kill_Enemy1\",\"Value\":4},{\"statisticsCritetia\":\"AttackBonusCard\",\"Value\":3},{\"statisticsCritetia\":\"kill_Enemy2\",\"Value\":4},{\"statisticsCritetia\":\"EmptyCard\",\"Value\":2},{\"statisticsCritetia\":\"HealthPotion5\",\"Value\":1}]},\"IntermidiateStatistics\":[]}"
 }
