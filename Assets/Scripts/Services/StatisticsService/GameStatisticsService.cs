@@ -33,8 +33,12 @@ namespace YGameTemplate.Services.StatisticsService
             return _intermidiateStatistics[id];
         }
 
-        public void CreateStatistics(string id) 
-            => _intermidiateStatistics.Add(id, new(new(id)));
+        public void CreateStatistics(string id)
+        {
+            if (!_intermidiateStatistics.ContainsKey(id))
+            _intermidiateStatistics.Add(id, new(new(id)));
+            else _intermidiateStatistics[id] = new(new(id));
+        }
 
         public void DeleteStatistics(string id)
         {
@@ -55,5 +59,10 @@ namespace YGameTemplate.Services.StatisticsService
 
             gameData.IntermidiateStatistics = interstat;
         }
+    }
+
+    public enum StandartStatisticsName
+    {
+        LevelStatistics = 0
     }
 }

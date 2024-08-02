@@ -77,6 +77,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private void RegisterStatisticService(StatisticsData general, List<StatisticsData> statisticsDatas)
         {
             GameStatisticsService statisticsService = new GameStatisticsService(general, statisticsDatas);
+            _container.RegisterInstance(statisticsService);
         }
 
         private IEnumerator LoadGame(IDataPersistentService service)

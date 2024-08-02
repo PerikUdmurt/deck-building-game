@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using YGameTemplate.Infrastructure.AssetProviders;
+using YGameTemplate.Services.StatisticsService;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
@@ -39,6 +40,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         {
             _sceneContainer = GetSceneContainer();
             RegisterLevelData();
+            RegisterIntermidiateStatistics();
             RegisterCharacterSpawner();
             _character = await InstantiateHero();
             _cardHolder = InitCardHolder();
@@ -51,6 +53,12 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         public void Exit()
         {
 
+        }
+
+        private void RegisterIntermidiateStatistics()
+        {
+            GameStatisticsService statisticService = _sceneContainer.Resolve<GameStatisticsService>();
+            statisticService.CreateStatistics(StandartStatisticsName.LevelStatistics.ToString());
         }
 
         private DiContainer GetSceneContainer()
@@ -74,9 +82,15 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private void RegisterCardSpawner()
         {
             IAssetProvider assetProvider = _sceneContainer.Resolve<IAssetProvider>();
+            GameStatisticsService statServise = _sceneContainer.Resolve<GameStatisticsService>();
 
             ICardSpawner cardSpawner =
-                new CardSpawner(_sceneContainer.Resolve<IStaticDataService>(), _character.CardPlayer, _cardHolder, assetProvider);
+                new CardSpawner
+                (_sceneContainer.Resolve<IStaticDataService>(), 
+                _character.CardPlayer, 
+                _cardHolder, 
+                assetProvider, 
+                statServise);
             _sceneContainer.RegisterInstance(cardSpawner);
         }
 
@@ -113,7 +127,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
                 c => new CharacterSpawner(
                     staticDataService: _sceneContainer.Resolve<IStaticDataService>(),
                     levelData: _sceneContainer.Resolve<LevelData>(),
-                    assetProvider: _sceneContainer.Resolve<IAssetProvider>())
+                    assetProvider: _sceneContainer.Resolve<IAssetProvider>(),
+                    statServise: _sceneContainer.Resolve<GameStatisticsService>())
                 );
     }
 }

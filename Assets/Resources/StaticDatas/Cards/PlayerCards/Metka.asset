@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Metka
   m_EditorClassIdentifier: 
   Name: Metka
-  EnergyCost: 0
+  EnergyCost: 2
   Sprite: {fileID: 0}
   TargetLayer: 1
   StaticEffects:

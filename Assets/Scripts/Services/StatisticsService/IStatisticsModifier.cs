@@ -4,6 +4,6 @@ namespace YGameTemplate.Services.StatisticsService
 {
     public interface IStatisticsModifier
     {
-        public void ModifyStatistics(float targetStat, ModifyType modifyType, int value);
+        public void ModifyStatistics(string targetStat, ModifyType modifyType, int value);
     }
 }

@@ -8,6 +8,7 @@ using System;
 using UnityEngine;
 using YGameTemplate.Infrastructure.AssetProviders;
 using YGameTemplate.Infrastructure.ObjectPool;
+using YGameTemplate.Services.StatisticsService;
 
 namespace CardBuildingGame.Infrastructure.Factories
 {
@@ -17,13 +18,15 @@ namespace CardBuildingGame.Infrastructure.Factories
         private IStaticDataService _staticDataService;
         private readonly ICardPlayer _cardPlayer;
         private readonly CardPresentationHolder _cardHolder;
+        private readonly CardStatisticsHandler _cardStatisticsHandler;
 
-        public CardSpawner(IStaticDataService staticDataService, ICardPlayer cardPlayer, CardPresentationHolder cardHolder, IAssetProvider assetProvider)
+        public CardSpawner(IStaticDataService staticDataService, ICardPlayer cardPlayer, CardPresentationHolder cardHolder, IAssetProvider assetProvider, GameStatisticsService gameStatisticsService)
         {
             _cardPool = new(assetProvider, BundlePath.Card);
             _staticDataService = staticDataService;
             _cardPlayer = cardPlayer;
             _cardHolder = cardHolder;
+            _cardStatisticsHandler = new(gameStatisticsService);
         }
 
         public async UniTask<ICard> SpawnCardByStaticData(string CardID, Vector3 at)
@@ -56,6 +59,7 @@ namespace CardBuildingGame.Infrastructure.Factories
         public void DespawnCard(ICard card) 
         {
             card.Played -= DespawnCard;
+            _cardStatisticsHandler.RemoveCard(card);
             card.TargetFinded -= _cardPlayer.PlayCard;
             card.CleanUp();
             _cardHolder.Remove(card.CardPresentation);
@@ -78,6 +82,7 @@ namespace CardBuildingGame.Infrastructure.Factories
             _cardPlayer.HandDeck.Add(cardModel);
             cardModel.TargetFinded += _cardPlayer.PlayCard;
             cardModel.Played += DespawnCard;
+            _cardStatisticsHandler.AddCard(cardModel);
             return cardModel;
         }
 

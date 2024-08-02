@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6082df299ac2344469533986a53911d1, type: 3}
   m_Name: Enemy2
   m_EditorClassIdentifier: 
-  Name: Enemy2
-  BundlePath: Enemy2
+  CharacterType: 5
   Health: 10
   MaxHealth: 10
   Defense: 2

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using YGameTemplate.Infrastructure.AssetProviders;
 using YGameTemplate.Infrastructure.Factory;
+using YGameTemplate.Services.StatisticsService;
 using static CardBuildingGame.Gameplay.Characters.Character;
 
 namespace CardBuildingGame.Infrastructure.Factories
@@ -17,12 +18,14 @@ namespace CardBuildingGame.Infrastructure.Factories
         private readonly IStaticDataService _staticDataService;
         private readonly LevelData _levelData;
         private readonly AbstractFactory<Character> _factory;
+        private readonly CharacterStatisticsHandler _statsHandler;
 
-        public CharacterSpawner(IStaticDataService staticDataService, LevelData levelData, IAssetProvider assetProvider) 
+        public CharacterSpawner(IStaticDataService staticDataService, LevelData levelData, IAssetProvider assetProvider, GameStatisticsService statServise) 
         {
             _staticDataService = staticDataService;
             _levelData = levelData;
             _factory = new(assetProvider);
+            _statsHandler = new(statServise);
         }
 
         public async UniTask<Character> SpawnCharacterFromStaticData(CharacterType type, int deckID ,Vector3 atPosition)
@@ -36,6 +39,7 @@ namespace CardBuildingGame.Infrastructure.Factories
             character.Construct(characterData, cardDatas);
             _levelData.Characters.Add(character);
             character.Died += DespawnCharacter;
+            _statsHandler.AddCharacter(character);
 
             return character;
         }
@@ -49,7 +53,9 @@ namespace CardBuildingGame.Infrastructure.Factories
 
         public void DespawnCharacter(Character character) 
         {
+            _statsHandler.RemoveCharacter(character);
             _levelData.Characters.Remove(character);
+            character.Died -= DespawnCharacter;
             GameObject.Destroy(character.gameObject);
         }
 

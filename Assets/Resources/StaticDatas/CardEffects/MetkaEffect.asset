@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
   Description: 
-  Status: 3
+  Status: 5
   Value: 1
-  isPerpetual: 0
+  isPerpetual: 1
   isStackable: 1
-  isFullDecimate: 0
+  isFullDecimate: 1
