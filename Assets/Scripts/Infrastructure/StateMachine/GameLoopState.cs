@@ -1,7 +1,5 @@
-﻿using CardBuildingGame.Gameplay.Characters;
-using CardBuildingGame.Infrastructure.Factories;
+﻿using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
-using System;
 using YGameTemplate.Infrastructure.AssetProviders;
 using YGameTemplate.Infrastructure.Score;
 

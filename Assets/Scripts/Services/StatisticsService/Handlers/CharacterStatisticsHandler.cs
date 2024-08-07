@@ -1,6 +1,5 @@
 using CardBuildingGame.Gameplay.Cards;
 using CardBuildingGame.Gameplay.Characters;
-using System.Collections.Generic;
 using UnityEngine;
 using YGameTemplate.Services.StatisticsService;
 using static YGameTemplate.Services.StatisticsService.Statistics;
@@ -26,7 +25,7 @@ public class CharacterStatisticsHandler : IStatisticsModifier
         => character.Died += OnDied;
 
     public void RemoveCharacter(Character character)
-        => character.Died += OnDied;
+        => character.Died -= OnDied;
 
     public void OnDied(Character character)
         => ModifyStatistics($"kill_{character.CurrentCharacterType}", ModifyType.Plus, 1);

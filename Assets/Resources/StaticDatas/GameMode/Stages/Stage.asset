@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb587f40069ea249ae738917323e198, type: 3}
+  m_Name: Stage
+  m_EditorClassIdentifier: 
+  NumbersOfRoom: 10
+  NumbersOfShop: 1
+  NumbersOfDialogue: 2
+  BattleRooms:
+  - {fileID: 11400000, guid: 5c932f50839488d429626b341b2c5674, type: 2}
+  - {fileID: 11400000, guid: 39cadeab2d259044aa124a6b6118d37a, type: 2}
+  - {fileID: 11400000, guid: 599168184b0500f428c82b3bddc19676, type: 2}
+  - {fileID: 11400000, guid: f17967cdb1a6f41488f8849d74b12fbf, type: 2}
+  DialogueRooms: []
+  BossRooms:
+  - {fileID: 11400000, guid: b74999901b13ef54abc5087edf038992, type: 2}
+  ShopRoom: {fileID: 0}

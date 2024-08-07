@@ -3,14 +3,13 @@ using CardBuildingGame.Gameplay.Cards;
 using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Gameplay.Stacks;
 using CardBuildingGame.Infrastructure.Factories;
+using CardBuildingGame.Infrastructure.GameScenario;
 using CardBuildingGame.Services;
 using CardBuildingGame.Services.DI;
 using CardBuildingGame.Services.SceneLoader;
 using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Build.Utilities;
 using UnityEngine;
 using YGameTemplate.Infrastructure.AssetProviders;
 using YGameTemplate.Infrastructure.Score;
@@ -51,6 +50,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             RegisterCardSpawner();
             RegisterScoreSystem();
             await InstantiateHUD();
+
+            ScenarioService scenarioService = new ScenarioService(GameMode.Infinite, _sceneContainer.Resolve<IStaticDataService>());
 
             _gameStateMachine.Enter<GameLoopState, DiContainer>(_sceneContainer);
         }

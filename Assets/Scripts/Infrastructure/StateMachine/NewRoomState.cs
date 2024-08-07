@@ -3,7 +3,6 @@ using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
 using Cysharp.Threading.Tasks;
-using System;
 using UnityEngine;
 using YGameTempate.Services.SaveLoad;
 
@@ -59,4 +58,14 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             progressService.SaveGame();
         }
     }
+}
+
+public class RoomScriptStaticData
+{
+
+}
+
+public class Battle
+{
+
 }
