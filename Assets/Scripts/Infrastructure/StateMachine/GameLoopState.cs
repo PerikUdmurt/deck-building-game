@@ -1,6 +1,7 @@
-﻿using CardBuildingGame.Gameplay.Characters;
+﻿using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
-using System;
+using YGameTemplate.Infrastructure.AssetProviders;
+using YGameTemplate.Infrastructure.Score;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
@@ -24,10 +25,15 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         public void Exit()
         {
-            Character hero = _sceneContainer.Resolve<Character>("Hero");
-            HUDController controller = _sceneContainer.Resolve<HUDController>();
+            CleanUp();
+        }
 
-            hero.Died -= controller.OnGameOver;
+        private void CleanUp()
+        {
+            _sceneContainer.Resolve<IAssetProvider>().CleanUp();
+            _sceneContainer.Resolve<ICardSpawner>().CleanUp();
+            _sceneContainer.Resolve<ScoreSystem>().CleanUp();
+            _sceneContainer.Resolve<HUDController>().CleanUp();
         }
     }
 }

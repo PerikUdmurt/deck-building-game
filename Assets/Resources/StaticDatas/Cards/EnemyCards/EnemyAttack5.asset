@@ -15,8 +15,6 @@ MonoBehaviour:
   Name: EnemyAttackCard
   EnergyCost: 0
   Sprite: {fileID: 0}
-  TargetLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  Effects:
+  TargetLayer: 0
+  StaticEffects:
   - {fileID: 11400000, guid: 99a3b96b8e726db4db28530d404e4342, type: 2}

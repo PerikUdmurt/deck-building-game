@@ -3,74 +3,89 @@ using CardBuildingGame.Gameplay.Cards;
 using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Gameplay.Stacks;
 using CardBuildingGame.Infrastructure.Factories;
+using CardBuildingGame.Infrastructure.GameScenario;
 using CardBuildingGame.Services;
 using CardBuildingGame.Services.DI;
 using CardBuildingGame.Services.SceneLoader;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using YGameTemplate.Infrastructure.AssetProviders;
+using YGameTemplate.Infrastructure.Score;
+using YGameTemplate.Services.StatisticsService;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
-    public class LoadLevelState : IPayloadedState<SceneName>
+    public class LoadLevelState : IPayloadedState<LevelData>
     {
         private readonly GameStateMachine _gameStateMachine;
-        private readonly DiContainer _projectContainer;
+        private DiContainer _sessionContainer;
         private DiContainer _sceneContainer;
         private SceneLoader _sceneLoader;
         private Character _character;
         private CardPresentationHolder _cardHolder;
 
-        public LoadLevelState(GameStateMachine gameStateMachine, DiContainer projectContainer)
+        public LoadLevelState(GameStateMachine gameStateMachine)
         {
             _gameStateMachine = gameStateMachine;
-            _projectContainer = projectContainer;
         }
 
-        public void Enter(SceneName sceneName)
+        public void Enter(LevelData levelData)
         {
-            _sceneLoader = _projectContainer.Resolve<SceneLoader>();
-            _sceneLoader.Load(sceneName, OnLoaded);
+            _sessionContainer = levelData.SessionDiContainer;
+            _sceneLoader = _sessionContainer.Resolve<SceneLoader>();
+            _sceneLoader.Load(levelData.RoomData.SceneName, OnLoaded);
         }
 
-        private void OnLoaded()
+        private async void OnLoaded()
         {
             _sceneContainer = GetSceneContainer();
             RegisterLevelData();
             RegisterCharacterSpawner();
-            _character = InstantiateHero();
+            _character = await InstantiateHero();
             _cardHolder = InitCardHolder();
             RegisterCardSpawner();
-            InstantiateHUD();
+            await InstantiateHUD();
+
             _gameStateMachine.Enter<GameLoopState, DiContainer>(_sceneContainer);
         }
 
         public void Exit()
         {
-
+            
         }
 
         private DiContainer GetSceneContainer()
         {
             GameObject gameObject = GameObject.FindGameObjectsWithTag("SceneInstaller").First();
             gameObject.TryGetComponent(out SceneInstaller sceneInstaller);
-            return sceneInstaller.GetSceneInstaller(_projectContainer);
+            return sceneInstaller.GetSceneInstaller(_sessionContainer);
         }
 
-        private Character InstantiateHero()
+        private async UniTask<Character> InstantiateHero()
         {
             ICharacterSpawner characterSpawner = _sceneContainer.Resolve<ICharacterSpawner>();
             Vector3 playerMarkerPosition = _sceneContainer.Resolve<Vector3>("HeroPosition");
-            Character hero = characterSpawner.SpawnCharacterFromStaticData("Hero", "HeroDeck", playerMarkerPosition);
+
+            Character hero = await characterSpawner.SpawnCharacterFromStaticData(Character.CharacterType.Player1, 1, playerMarkerPosition);
             _sceneContainer.RegisterInstance(hero, "Hero");
-            
+
             return hero;
         }
 
         private void RegisterCardSpawner()
         {
+            IAssetProvider assetProvider = _sceneContainer.Resolve<IAssetProvider>();
+            GameStatisticsService statServise = _sceneContainer.Resolve<GameStatisticsService>();
+
             ICardSpawner cardSpawner =
-                new CardSpawner(6, _sceneContainer.Resolve<IStaticDataService>(), _character.CardPlayer, _cardHolder);
+                new CardSpawner
+                (_sceneContainer.Resolve<IStaticDataService>(), 
+                _character.CardPlayer, 
+                _cardHolder, 
+                assetProvider, 
+                statServise);
             _sceneContainer.RegisterInstance(cardSpawner);
         }
 
@@ -83,12 +98,18 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             return cardHolder;
         }
 
-        private void InstantiateHUD()
+        private async UniTask InstantiateHUD()
         {
-            IHUDSpawner hudSpawner = new HUDSpawner();
-            HUD hud = hudSpawner.SpawnHUD();
-            HUDController hudController = new(hud, _character.CardPlayer, _gameStateMachine);
-            _character.Died += hudController.OnGameOver;
+            IAssetProvider assetProvider = _sceneContainer.Resolve<IAssetProvider>();
+            IHUDSpawner hudSpawner = new HUDSpawner(assetProvider);
+            HUD hud = await hudSpawner.SpawnHUD();
+            HUDController hudController = new(
+                hud, 
+                _character, 
+                _gameStateMachine, 
+                _sceneContainer.Resolve<ScoreSystem>(),
+                _sceneContainer.Resolve<GameStatisticsService>()
+                );
             _sceneContainer.RegisterInstance(hudController);
         }
 
@@ -96,7 +117,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         {
             int maxRoom = _sceneContainer.Resolve<int>("MaxRoom");
 
-            LevelData levelData = new(0, maxRoom, new List<ICardTarget>());
+            LevelInfo levelData = new(0, maxRoom, new List<ICardTarget>());
             _sceneContainer.RegisterInstance(levelData);
         }
 
@@ -105,6 +126,23 @@ namespace CardBuildingGame.Infrastructure.StateMachine
                 DiRegistrationType.AsTransient,
                 c => new CharacterSpawner(
                     staticDataService: _sceneContainer.Resolve<IStaticDataService>(),
-                    levelData: _sceneContainer.Resolve<LevelData>()));
+                    levelInfo: _sceneContainer.Resolve<LevelInfo>(),
+                    assetProvider: _sceneContainer.Resolve<IAssetProvider>(),
+                    statServise: _sceneContainer.Resolve<GameStatisticsService>())
+                );
+    }
+
+    public class LevelData
+    {
+        public RoomStaticData RoomData;
+        public DiContainer SessionDiContainer;
+        public int CurrentFloor;
+
+        public LevelData(RoomStaticData roomData, DiContainer sessionDiContainer, int currentFloor)
+        {
+            RoomData = roomData;
+            SessionDiContainer = sessionDiContainer;
+            CurrentFloor = currentFloor;
+        }
     }
 }

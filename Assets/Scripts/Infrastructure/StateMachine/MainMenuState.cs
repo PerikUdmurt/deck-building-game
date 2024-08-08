@@ -1,4 +1,5 @@
-﻿using CardBuildingGame.Services.DI;
+﻿using CardBuildingGame.Infrastructure.GameScenario;
+using CardBuildingGame.Services.DI;
 using CardBuildingGame.Services.SceneLoader;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
@@ -27,7 +28,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private void OnLoaded()
         {
-            _gameStateMachine.Enter<LoadLevelState, SceneName>(SceneName.GameplayScene);
+            _gameStateMachine.Enter<GameModeRegistrateState, GameMode>(GameMode.Test);
         }
     }
 }

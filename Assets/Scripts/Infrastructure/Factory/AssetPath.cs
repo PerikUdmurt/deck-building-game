@@ -2,12 +2,17 @@
 {
     public class AssetPath
     {
-        public const string Card = "Prefabs/Card";
-        public const string Hero = "Prefabs/Characters/Hero";
-        public const string Enemy = "Prefabs/Characters/Enemy";
-        public const string Enemy2 = "Prefabs/Characters/Enemy2";
         public const string MarkerUI = "Prefabs/MarkerWithText";
-        public const string HUD = "Prefabs/HUD";
+    }
+
+    public class BundlePath
+    {
+        public const string Card = "Card";
+        public const string HUD = "HUD";
+        public const string Hero = "Hero";
+        public const string Enemy = "Enemy";
+        public const string Enemy2 = "Enemy2";
+        public const string StatusPresentation = "StatusPresentation";
     }
 }
     

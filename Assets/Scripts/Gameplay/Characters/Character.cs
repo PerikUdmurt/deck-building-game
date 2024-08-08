@@ -1,4 +1,5 @@
 using CardBuildingGame.Gameplay.Cards;
+using CardBuildingGame.Gameplay.Statuses;
 using CardBuildingGame.UI;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,19 @@ namespace CardBuildingGame.Gameplay.Characters
 {
     public class Character : MonoBehaviour, ICardTarget
     {
-        [SerializeField] private MarkerUI _healthMarker;
-        [SerializeField] private MarkerUI _defenseMarker;
-        [SerializeField] private MarkerUI _attackMarker;
-        [SerializeField] private TargetLayer _targetLayer;
-        [SerializeField] private Animator _animator;
+        [SerializeField] protected private MarkerUI _healthMarker;
+        [SerializeField] protected private MarkerUI _defenseMarker;
+        [SerializeField] protected private MarkerUI _attackMarker;
+        [SerializeField] protected private TargetLayer _targetLayer;
+        [SerializeField] protected private Animator _animator;
+        [SerializeField] protected private StatusPresentationHolder _statusPresentationHolder;
 
-        private IHealth _health;
-        private ICardPlayer _player;
+        protected private IHealth _health;
+        protected private ICardPlayer _player;
+        protected private IStatusHolder _statusHolder;
 
+        public CharacterType CurrentCharacterType { get; private set; }
+        public IStatusHolder StatusHolder { get => _statusHolder; }
         public IHealth Health { get => _health; }
         public ICardPlayer CardPlayer { get => _player; }
         public TargetLayer TargetLayer { get => _targetLayer; }
@@ -24,23 +29,33 @@ namespace CardBuildingGame.Gameplay.Characters
 
         public event Action<Character> Died;
 
-        public void Construct(int health, int maxHealth, int energy, int maxEnergy, List<CardData> cardDatas, int defense = 0)
+        public void Construct(CharacterData characterData, List<CardData> cardDatas)
         {
-            _player = new CardPlayer(cardDatas, energy, maxEnergy, this);
-            _health = new Health(health, maxHealth, defense);
+            _player = new CardPlayer(cardDatas, characterData.Energy, characterData.MaxEnergy, this);
+            _health = new Health(characterData.Health, characterData.MaxHealth, characterData.Defense);
+            _statusHolder = new StatusHolder();
+            CurrentCharacterType = characterData.CharacterType;
+
             _health.HealthChanged += UpdateHealthMarker;
             _health.DefenceChanged += UpdateDefenceMarker;
             _player.CardPrepared += UpdateAttackMarker;
+            _statusHolder.Changed += UpdateStatusPresentation;
+            _health.Died += OnDied;
+
+            UpdateStatusPresentation();
             UpdateAttackMarker(null);
             UpdateDefenceMarker(_health.Defence);
             UpdateHealthMarker(_health.CurrentHealth, _health.MaxHealth);
-            _health.Died += OnDied;
         }
-
 
         private void OnDied()
         {
             Died?.Invoke(this);
+        }
+
+        private void UpdateStatusPresentation()
+        {
+
         }
 
         private void UpdateHealthMarker(int health, int maxHealth)
@@ -70,6 +85,19 @@ namespace CardBuildingGame.Gameplay.Characters
                 _attackMarker.SetText(card.CardData.Effects[0]?.TextForMarker);
                 _attackMarker.SetActive(true);
             }
+        }
+
+        public enum CharacterType
+        {
+            Player1 = 0, 
+            Player2 = 1, 
+            Player3 = 2,  
+            Player4 = 3,
+            
+            Enemy1 = 4, 
+            Enemy2 = 5, 
+            Enemy3 = 6, 
+            Enemy4 = 7
         }
     }
 }

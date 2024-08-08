@@ -36,7 +36,7 @@ namespace CardBuildingGame.Gameplay.Cards
 
         private void PlayCardEffects(ICardTarget target, ICardTarget source = null)
         {
-            foreach (CardEffect effect in _cardData.Effects)
+            foreach (CardEffectStaticData effect in _cardData.Effects)
                 effect.Play(target, source);
         }
 

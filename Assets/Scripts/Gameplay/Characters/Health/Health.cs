@@ -52,8 +52,14 @@ namespace CardBuildingGame.Gameplay.Characters
             }
         }
 
-        public void GetDamage(int damage)
+        public void GetDamage(int damage, DamageType damageType = DamageType.Simple)
         {
+            if (damageType == DamageType.Directly) 
+            { 
+                CurrentHealth -= damage;
+                return;
+            }
+
             if (Defence < damage)
                 CurrentHealth -= (damage - Defence);
 
@@ -68,6 +74,12 @@ namespace CardBuildingGame.Gameplay.Characters
         public void GetDefense(int defense) 
         { 
             Defence += defense;
+        }
+
+        public enum DamageType
+        {
+            Simple = 0,
+            Directly = 1
         }
     }
 }

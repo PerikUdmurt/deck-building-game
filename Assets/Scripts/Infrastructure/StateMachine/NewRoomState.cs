@@ -1,26 +1,29 @@
 ﻿using CardBuildingGame.Datas;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.Infrastructure.Factories;
 using CardBuildingGame.Services.DI;
-using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using YGameTempate.Services.SaveLoad;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
     public class NewRoomState : IState
     {
         private readonly RoundStateMachine _roundStateMachine;
-        private readonly DiContainer _projectContainer;
+        private readonly DiContainer _sceneContainer;
 
-        public NewRoomState(RoundStateMachine roundStateMachine, DiContainer projectContainer) 
+        public NewRoomState(RoundStateMachine roundStateMachine, DiContainer sceneContainer) 
         {
             _roundStateMachine = roundStateMachine;
-            _projectContainer = projectContainer;
+            _sceneContainer = sceneContainer;
         }
 
-        public void Enter()
+        public async void Enter()
         {
             UpdateHUD();
-            SpawnEnemies();
+            await SpawnEnemies();
+            SaveProgress();
 
             _roundStateMachine.Enter<PlayerRoundState>();
         }
@@ -32,21 +35,37 @@ namespace CardBuildingGame.Infrastructure.StateMachine
        
         private void UpdateHUD()
         {
-            HUDController hud = _projectContainer.Resolve<HUDController>();
-            LevelData levelData = _projectContainer.Resolve<LevelData>();
+            HUDController hud = _sceneContainer.Resolve<HUDController>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
 
             levelData.CurrentRoom += 1;
             hud.SetRoomText(levelData.CurrentRoom, levelData.MaxRoom);
         }
 
-        private void SpawnEnemies()
+        private async UniTask SpawnEnemies()
         {
-            ICharacterSpawner characterSpawner = _projectContainer.Resolve<ICharacterSpawner>();
-            Vector3 enemyPosition = _projectContainer.Resolve<Vector3>("EnemyPosition");
-            Vector3 delta = _projectContainer.Resolve<Vector3>("DeltaEnemySpawnOffset");
+            ICharacterSpawner characterSpawner = _sceneContainer.Resolve<ICharacterSpawner>();
+            Vector3 enemyPosition = _sceneContainer.Resolve<Vector3>("EnemyPosition");
+            Vector3 delta = _sceneContainer.Resolve<Vector3>("DeltaEnemySpawnOffset");
 
-            characterSpawner.SpawnCharacterFromStaticData("Enemy1", "EnemyDeck1", enemyPosition);
-            characterSpawner.SpawnCharacterFromStaticData("Enemy2", "EnemyDeck2", enemyPosition + delta);
+            await characterSpawner.SpawnCharacterFromStaticData(Character.CharacterType.Enemy1, 1, enemyPosition);
+            await characterSpawner.SpawnCharacterFromStaticData(Character.CharacterType.Enemy2, 1, enemyPosition + delta);
+        }
+
+        private void SaveProgress()
+        {
+            IDataPersistentService progressService = _sceneContainer.Resolve<IDataPersistentService>();
+            progressService.SaveGame();
         }
     }
+}
+
+public class RoomScriptStaticData
+{
+
+}
+
+public class Battle
+{
+
 }

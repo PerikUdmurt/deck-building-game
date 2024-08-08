@@ -1,4 +1,5 @@
 using CardBuildingGame.Gameplay.Cards;
+using CardBuildingGame.Gameplay.Characters;
 using CardBuildingGame.StaticDatas;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace CardBuildingGame
             => new
                 (
                 energyCost: staticData.EnergyCost,
-                effects: staticData.Effects,
+                effects: staticData.StaticEffects,
                 cardName: staticData.Name,
                 sprite: staticData.Sprite,
                 targetLayer: staticData.TargetLayer
@@ -28,5 +29,16 @@ namespace CardBuildingGame
 
             return cardDatas;
         }
+
+        public static CharacterData ToCharacterData(this CharacterStaticData staticData)
+        => new()
+        {
+            Health = staticData.Health,
+            MaxHealth = staticData.MaxHealth,
+            Energy = staticData.Energy,
+            MaxEnergy = staticData.Energy,
+            Defense = staticData.Defense,
+            CharacterType = staticData.CharacterType
+        };
     }
 }

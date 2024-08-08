@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9c7578fe09e0024eb805cf4ca9f7dcd, type: 3}
   m_Name: PlayerDeck
   m_EditorClassIdentifier: 
-  ID: HeroDeck
+  CharacterType: 0
+  ID: 1
   Cards:
   - {fileID: 11400000, guid: 27e1ad968bacc47439813de51c447086, type: 2}
   - {fileID: 11400000, guid: 27e1ad968bacc47439813de51c447086, type: 2}
@@ -26,3 +27,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc0afb820f25eab40a1ec2fa6e11106a, type: 2}
   - {fileID: 11400000, guid: b7a0d00418f7312479411d68c3905675, type: 2}
   - {fileID: 11400000, guid: b7a0d00418f7312479411d68c3905675, type: 2}
+  - {fileID: 11400000, guid: 1bdec5acfbe474941b5cda833848d874, type: 2}
+  - {fileID: 11400000, guid: 25d150057628627498b7fb17ddc13adb, type: 2}
+  - {fileID: 11400000, guid: a67868bae4af0e545b772bf28f33671a, type: 2}

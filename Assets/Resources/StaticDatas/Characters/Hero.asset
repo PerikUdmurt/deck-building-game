@@ -13,20 +13,8 @@ MonoBehaviour:
   m_Name: Hero
   m_EditorClassIdentifier: 
   Name: Hero
-  Prefab: {fileID: 1490894893552052375, guid: 4a720944a115d9447a4996ddaa03525b, type: 3}
+  BundlePath: Hero
   Health: 30
   MaxHealth: 30
   Defense: 0
-  Cards:
-  - {fileID: 11400000, guid: b7a0d00418f7312479411d68c3905675, type: 2}
-  - {fileID: 11400000, guid: cc0afb820f25eab40a1ec2fa6e11106a, type: 2}
-  - {fileID: 11400000, guid: 27e1ad968bacc47439813de51c447086, type: 2}
-  - {fileID: 11400000, guid: b7a0d00418f7312479411d68c3905675, type: 2}
-  - {fileID: 11400000, guid: cc0afb820f25eab40a1ec2fa6e11106a, type: 2}
-  - {fileID: 11400000, guid: 27e1ad968bacc47439813de51c447086, type: 2}
-  - {fileID: 11400000, guid: b7a0d00418f7312479411d68c3905675, type: 2}
-  - {fileID: 11400000, guid: cc0afb820f25eab40a1ec2fa6e11106a, type: 2}
-  - {fileID: 11400000, guid: 27e1ad968bacc47439813de51c447086, type: 2}
-  - {fileID: 11400000, guid: b7a0d00418f7312479411d68c3905675, type: 2}
-  - {fileID: 11400000, guid: cc0afb820f25eab40a1ec2fa6e11106a, type: 2}
-  - {fileID: 11400000, guid: 27e1ad968bacc47439813de51c447086, type: 2}
+  Energy: 10

@@ -1,18 +1,15 @@
-using System.Collections.Generic;
 using UnityEngine;
+using static CardBuildingGame.Gameplay.Characters.Character;
 
 namespace CardBuildingGame.StaticDatas
 {
     [CreateAssetMenu(fileName = "NewCharacter", menuName = "StaticData/Character")]
     public class CharacterStaticData : StaticData
     {
-        public override string StaticDataID => Name;
+        public override string StaticDataID => CharacterType.ToString();
 
         [Header("Info")]
-        public string Name = "EmptyName";
-
-        [Header("Prefab")]
-        public GameObject Prefab;
+        public CharacterType CharacterType;
         
         [Header("Health")]
         public int Health = 30;
@@ -28,9 +25,6 @@ namespace CardBuildingGame.StaticDatas
             if (MaxHealth < 1) MaxHealth = 1;
             if (Defense < 0) Defense = 0;
             if (Health < 1) Health = 1;
-
-            if (Prefab == null)
-                Debug.Log("Assign GameObject for prefab");
         }
     }
 }

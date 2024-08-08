@@ -1,6 +1,10 @@
 ﻿using CardBuildingGame.Datas;
+using CardBuildingGame.Gameplay.Cards;
 using CardBuildingGame.Gameplay.Characters;
+using CardBuildingGame.Gameplay.Statuses;
 using CardBuildingGame.Services.DI;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
@@ -31,6 +35,8 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             _roundStateMachine.Enter<PlayerRoundState>();
         }
 
+
+
         public void Exit()
         {
             HUDController hud = _sceneContainer.Resolve<HUDController>();
@@ -40,7 +46,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private bool CheckGameFinished()
         {
             HUDController hud = _sceneContainer.Resolve<HUDController>();
-            LevelData levelData = _sceneContainer.Resolve<LevelData>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
 
             if (CheckRoomFinished())
             {
@@ -57,22 +63,26 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private void DoEnemyActions()
         {
-            LevelData levelData = _sceneContainer.Resolve<LevelData>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
+            StatusPlayer statusPlayer = new();
 
             var enemies = from enemy in levelData.Characters
                           where enemy.TargetLayer == TargetLayer.Enemy
                           select enemy;
 
-            foreach (var enemy in enemies)
+            List<ICardTarget> enemiesList = enemies.ToList();
+
+            for (int i = 0; i < enemiesList.Count(); i++)
             {
-                enemy.CardPlayer.PlayPreparedCard(levelData.Characters);
+                statusPlayer.ExecuteAllStatuses(enemiesList[i]);
+                enemiesList[i].CardPlayer.PlayPreparedCard(levelData.Characters);
             }
         }
 
 
         private bool CheckRoomFinished()
         {
-            LevelData levelData = _sceneContainer.Resolve<LevelData>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
 
             var enemies = from enemy in levelData.Characters
                           where enemy.TargetLayer == TargetLayer.Enemy

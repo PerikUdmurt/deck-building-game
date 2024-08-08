@@ -11,6 +11,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _cardResetText;
     [SerializeField] private TextMeshProUGUI _floorText;
     [SerializeField] private TextMeshProUGUI _energyText;
+    [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private CanvasGroup _pauseCanvas;
     [SerializeField] private CanvasGroup _endGameCanvas;
     [SerializeField] private Button _endGameButton;
@@ -22,6 +23,8 @@ public class HUD : MonoBehaviour
     public CanvasGroup MainGameCanvas { get => _mainGameCanvas; }
     public CanvasGroup PauseCanvas { get => _pauseCanvas; }
     public CanvasGroup EndGameCanvas { get => _endGameCanvas; }
+
+    public void SetScoreText(string text) => _scoreText.text = text;
 
     public void SetDeckText(string text) => _deckText.text = text;
 

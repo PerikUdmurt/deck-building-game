@@ -12,7 +12,7 @@ namespace CardBuildingGame.Gameplay.Characters
         event Action<int, int> HealthChanged;
         event Action Died;
 
-        void GetDamage(int damage);
+        void GetDamage(int damage, Health.DamageType damageType = Health.DamageType.Simple);
         void GetDefense(int defense);
         void GetHealth(int healPoints);
     }
