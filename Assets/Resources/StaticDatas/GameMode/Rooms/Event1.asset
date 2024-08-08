@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RoomIcon: {fileID: 0}
   SceneName: 0
-  CurrentRoomType: 2
+  CurrentRoomType: 1
   Difficulty: 0
   Enemies: []

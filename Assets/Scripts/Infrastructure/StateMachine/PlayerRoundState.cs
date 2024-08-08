@@ -31,7 +31,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private void ExecuteAllPlayerStatus()
         {
-            LevelData levelData = _container.Resolve<LevelData>();
+            LevelInfo levelData = _container.Resolve<LevelInfo>();
             StatusPlayer statusPlayer = new();
 
             var players = from player in levelData.Characters
@@ -46,7 +46,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private void RestorePlayer()
         {
-            LevelData levelData = _container.Resolve<LevelData>();
+            LevelInfo levelData = _container.Resolve<LevelInfo>();
 
             var players = from player in levelData.Characters
                           where player.TargetLayer == TargetLayer.Player
@@ -60,7 +60,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private void PrepareEnemyAttack()
         {
-            LevelData levelData = _container.Resolve<LevelData>();
+            LevelInfo levelData = _container.Resolve<LevelInfo>();
             
             var enemies = from enemy in levelData.Characters
                           where enemy.TargetLayer == TargetLayer.Enemy

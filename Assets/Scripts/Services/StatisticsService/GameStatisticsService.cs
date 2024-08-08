@@ -63,6 +63,6 @@ namespace YGameTemplate.Services.StatisticsService
 
     public enum StandartStatisticsName
     {
-        LevelStatistics = 0
+        GameModeStatistics = 0
     }
 }

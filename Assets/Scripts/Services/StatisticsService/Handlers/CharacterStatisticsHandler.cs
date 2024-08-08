@@ -16,7 +16,7 @@ public class CharacterStatisticsHandler : IStatisticsModifier
     public void ModifyStatistics(string targetStat, Statistics.ModifyType modifyType, int value)
     {
         _statisticsService.GeneneralStatistics.ModifyStatistics(targetStat, modifyType, value);
-        Statistics levelStats = _statisticsService.GetStatistics(StandartStatisticsName.LevelStatistics.ToString());
+        Statistics levelStats = _statisticsService.GetStatistics(StandartStatisticsName.GameModeStatistics.ToString());
         levelStats.ModifyStatistics(targetStat, modifyType, value);
         Debug.Log(_statisticsService.GeneneralStatistics.GetStatisticsData().ToString());
     }
@@ -42,7 +42,7 @@ public class CardStatisticsHandler : IStatisticsModifier
     public void ModifyStatistics(string targetStat, Statistics.ModifyType modifyType, int value)
     {
         _statisticsService.GeneneralStatistics.ModifyStatistics(targetStat, modifyType, value);
-        Statistics levelStats = _statisticsService.GetStatistics(StandartStatisticsName.LevelStatistics.ToString());
+        Statistics levelStats = _statisticsService.GetStatistics(StandartStatisticsName.GameModeStatistics.ToString());
         levelStats.ModifyStatistics(targetStat, modifyType, value);
     }
 

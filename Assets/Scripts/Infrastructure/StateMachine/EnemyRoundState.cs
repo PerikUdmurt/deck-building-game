@@ -46,7 +46,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private bool CheckGameFinished()
         {
             HUDController hud = _sceneContainer.Resolve<HUDController>();
-            LevelData levelData = _sceneContainer.Resolve<LevelData>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
 
             if (CheckRoomFinished())
             {
@@ -63,7 +63,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private void DoEnemyActions()
         {
-            LevelData levelData = _sceneContainer.Resolve<LevelData>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
             StatusPlayer statusPlayer = new();
 
             var enemies = from enemy in levelData.Characters
@@ -82,7 +82,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
 
         private bool CheckRoomFinished()
         {
-            LevelData levelData = _sceneContainer.Resolve<LevelData>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
 
             var enemies = from enemy in levelData.Characters
                           where enemy.TargetLayer == TargetLayer.Enemy

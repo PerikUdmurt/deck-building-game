@@ -36,7 +36,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         private void UpdateHUD()
         {
             HUDController hud = _sceneContainer.Resolve<HUDController>();
-            LevelData levelData = _sceneContainer.Resolve<LevelData>();
+            LevelInfo levelData = _sceneContainer.Resolve<LevelInfo>();
 
             levelData.CurrentRoom += 1;
             hud.SetRoomText(levelData.CurrentRoom, levelData.MaxRoom);

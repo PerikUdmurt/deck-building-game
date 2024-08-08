@@ -17,41 +17,36 @@ using YGameTemplate.Services.StatisticsService;
 
 namespace CardBuildingGame.Infrastructure.StateMachine
 {
-    public class LoadLevelState : IPayloadedState<SceneName>
+    public class LoadLevelState : IPayloadedState<LevelData>
     {
         private readonly GameStateMachine _gameStateMachine;
-        private readonly DiContainer _projectContainer;
+        private DiContainer _sessionContainer;
         private DiContainer _sceneContainer;
         private SceneLoader _sceneLoader;
         private Character _character;
         private CardPresentationHolder _cardHolder;
-        private ScoreSystem _scoreSystem;
 
-        public LoadLevelState(GameStateMachine gameStateMachine, DiContainer projectContainer)
+        public LoadLevelState(GameStateMachine gameStateMachine)
         {
             _gameStateMachine = gameStateMachine;
-            _projectContainer = projectContainer;
         }
 
-        public void Enter(SceneName sceneName)
+        public void Enter(LevelData levelData)
         {
-            _sceneLoader = _projectContainer.Resolve<SceneLoader>();
-            _sceneLoader.Load(sceneName, OnLoaded);
+            _sessionContainer = levelData.SessionDiContainer;
+            _sceneLoader = _sessionContainer.Resolve<SceneLoader>();
+            _sceneLoader.Load(levelData.RoomData.SceneName, OnLoaded);
         }
 
         private async void OnLoaded()
         {
             _sceneContainer = GetSceneContainer();
             RegisterLevelData();
-            RegisterIntermidiateStatistics();
             RegisterCharacterSpawner();
             _character = await InstantiateHero();
             _cardHolder = InitCardHolder();
             RegisterCardSpawner();
-            RegisterScoreSystem();
             await InstantiateHUD();
-
-            ScenarioService scenarioService = new ScenarioService(GameMode.Infinite, _sceneContainer.Resolve<IStaticDataService>());
 
             _gameStateMachine.Enter<GameLoopState, DiContainer>(_sceneContainer);
         }
@@ -61,24 +56,11 @@ namespace CardBuildingGame.Infrastructure.StateMachine
             
         }
 
-        private void RegisterScoreSystem()
-        {
-            _scoreSystem = new ScoreSystem
-                (_sceneContainer.Resolve<GameStatisticsService>());
-            _sceneContainer.RegisterInstance(_scoreSystem);
-        }
-
-        private void RegisterIntermidiateStatistics()
-        {
-            GameStatisticsService statisticService = _sceneContainer.Resolve<GameStatisticsService>();
-            statisticService.CreateStatistics(StandartStatisticsName.LevelStatistics.ToString());
-        }
-
         private DiContainer GetSceneContainer()
         {
             GameObject gameObject = GameObject.FindGameObjectsWithTag("SceneInstaller").First();
             gameObject.TryGetComponent(out SceneInstaller sceneInstaller);
-            return sceneInstaller.GetSceneInstaller(_projectContainer);
+            return sceneInstaller.GetSceneInstaller(_sessionContainer);
         }
 
         private async UniTask<Character> InstantiateHero()
@@ -135,7 +117,7 @@ namespace CardBuildingGame.Infrastructure.StateMachine
         {
             int maxRoom = _sceneContainer.Resolve<int>("MaxRoom");
 
-            LevelData levelData = new(0, maxRoom, new List<ICardTarget>());
+            LevelInfo levelData = new(0, maxRoom, new List<ICardTarget>());
             _sceneContainer.RegisterInstance(levelData);
         }
 
@@ -144,9 +126,23 @@ namespace CardBuildingGame.Infrastructure.StateMachine
                 DiRegistrationType.AsTransient,
                 c => new CharacterSpawner(
                     staticDataService: _sceneContainer.Resolve<IStaticDataService>(),
-                    levelData: _sceneContainer.Resolve<LevelData>(),
+                    levelInfo: _sceneContainer.Resolve<LevelInfo>(),
                     assetProvider: _sceneContainer.Resolve<IAssetProvider>(),
                     statServise: _sceneContainer.Resolve<GameStatisticsService>())
                 );
+    }
+
+    public class LevelData
+    {
+        public RoomStaticData RoomData;
+        public DiContainer SessionDiContainer;
+        public int CurrentFloor;
+
+        public LevelData(RoomStaticData roomData, DiContainer sessionDiContainer, int currentFloor)
+        {
+            RoomData = roomData;
+            SessionDiContainer = sessionDiContainer;
+            CurrentFloor = currentFloor;
+        }
     }
 }

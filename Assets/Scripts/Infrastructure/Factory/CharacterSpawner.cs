@@ -16,14 +16,14 @@ namespace CardBuildingGame.Infrastructure.Factories
     public class CharacterSpawner : ICharacterSpawner
     {
         private readonly IStaticDataService _staticDataService;
-        private readonly LevelData _levelData;
+        private readonly LevelInfo _levelData;
         private readonly AbstractFactory<Character> _factory;
         private readonly CharacterStatisticsHandler _statsHandler;
 
-        public CharacterSpawner(IStaticDataService staticDataService, LevelData levelData, IAssetProvider assetProvider, GameStatisticsService statServise) 
+        public CharacterSpawner(IStaticDataService staticDataService, LevelInfo levelInfo, IAssetProvider assetProvider, GameStatisticsService statServise) 
         {
             _staticDataService = staticDataService;
-            _levelData = levelData;
+            _levelData = levelInfo;
             _factory = new(assetProvider);
             _statsHandler = new(statServise);
         }

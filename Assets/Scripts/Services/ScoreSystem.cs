@@ -12,7 +12,7 @@ namespace YGameTemplate.Infrastructure.Score
 
         public ScoreSystem(GameStatisticsService gameStatisticsService)
         {
-            _statistics = gameStatisticsService.GetStatistics(StandartStatisticsName.LevelStatistics.ToString());
+            _statistics = gameStatisticsService.GetStatistics(StandartStatisticsName.GameModeStatistics.ToString());
             _statistics.Modified += RecalculateScore;
             _enemyScoreCalculator = new(_statistics);
         }
