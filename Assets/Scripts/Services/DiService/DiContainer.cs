@@ -24,9 +24,7 @@ namespace CardBuildingGame.Services.DI
             (string, Type) key = (tag, typeof(T));
 
             if (_registrations.ContainsKey(key))
-            {
                 throw new Exception($"DI: Factory with tag {key.Item1} and type {key.Item2.FullName} has already registered");
-            }
 
             if (registrationType == DiRegistrationType.AsSingle)
             return _registrations[key] = new DiRegistration
@@ -79,9 +77,8 @@ namespace CardBuildingGame.Services.DI
         private T GetSingleton<T>(DiRegistration registration)
         {
             if (registration.Instance == null && registration.Factory != null)
-            {
                 registration.Instance = registration.Factory(this);
-            }
+
             return (T)registration.Instance;
         }
     }
